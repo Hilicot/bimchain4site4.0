@@ -1,9 +1,3 @@
-
-
-let preview;
-
-
-
 /**
  * Simple class to represent a blockchain transaction
  */
@@ -19,11 +13,9 @@ class Transaction {
         this.description = description;
     }
 
-    public async getMetadata(): Promise<any> {
-        if(!preview)
-            await getPreviewImage();
+    public getMetadata(): any {
         return {
-            image: preview,
+            image: new Blob([], { type: 'image/png'}),
             name: this.name,
             description: this.description,
             properties: { content: this.obj, type: this.obj.type }
@@ -48,15 +40,5 @@ class TransactionResult {
         this.url = url;
     }
 }
-
-async function getPreviewImage() {
-    await fetch('public/blockchain_preview.png').then((res) => {
-        res.blob().then((blob) => {
-            preview = new File([blob], 'blockchain_preview.png', { type: 'image/png' });
-        });
-    });
-}
-
-getPreviewImage();
 
 export { Transaction, TransactionResult };

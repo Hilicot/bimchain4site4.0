@@ -24,7 +24,7 @@ class NFTStorageBlockchain extends Blockchain {
 
     commitTransaction = async (transaction: Transaction) => {
         try {
-            const result = await this.nftstorage.store(await transaction.getMetadata());
+            const result = await this.nftstorage.store(transaction.getMetadata());
             return new TransactionResult(transaction, true, result.ipnft, result.url);
         } catch (e) {
             console.error(e);
