@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row } from 'antd';
 import { useTranslation } from 'react-i18next';
-import {  useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { UploadOutlined, InboxOutlined } from '@ant-design/icons';
 import * as S from '@app/pages/uiComponentsPages//UIComponentsPage.styles';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
@@ -33,20 +33,17 @@ const FilesPage: React.FC = () => {
       const row = new FileTreeTableRow(file);
       setFiles([...files, row])
     },
-    showUploadList:false
+    showUploadList: false
   };
 
   const desktopLayout = (
     <Row>
       <SF.LeftSideCol xl={16} xxl={17} id="desktop-content">
-        <Row gutter={[60, 60]}>
-          <FileTable data={files} setData={setFiles}/>
-        </Row>
-
+        <FileTable data={files} setData={setFiles} />
       </SF.LeftSideCol>
 
       <SF.RightSideCol xl={8} xxl={7}>
-        <S.Card title={'Upload Files'}  >
+        <S.BoundedCard title={'Upload Files'}  >
           <UploadDragger {...uploadProps}>
             <DraggerIconWrapper>
               <InboxOutlined />
@@ -54,9 +51,9 @@ const FilesPage: React.FC = () => {
             <DraggerTitle>{t('uploads.dragUpload')}</DraggerTitle>
             <DraggerDescription>{"Multiple files are allowed"}</DraggerDescription>
           </UploadDragger>
-          
+
           {/*<DropZone data={files} setData={setFiles}/>*/}
-        </S.Card>
+        </S.BoundedCard>
       </SF.RightSideCol>
     </Row>
   );

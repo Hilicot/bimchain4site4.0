@@ -26,7 +26,7 @@ export const Card = styled(CommonCard)`
 `;
 
 export const BoundedCard = styled(Card)`
-  max-height: 20rem;
+  max-height: 25rem;
   `;
 
 export const InputsWrapper = styled.div`
