@@ -34,4 +34,4 @@ yarn-error.log*
 /public/themes
 
 # sensitive files
-/src/blockchain/NFT.Storage/NFT.Storage_key.json
+src/blockchain/NFT.Storage/NFT.Storage_key*
