@@ -1,7 +1,7 @@
 /**
  * Simple class to represent a blockchain transaction
  */
-class Transaction {
+export class Transaction {
     obj: File;
     name: string;
     description: string;
@@ -14,7 +14,7 @@ class Transaction {
         this.result = new TransactionResult(this);
     }
 
-    public getMetadata(): any {
+    public getMetadata(): Metadata {
         return {
             image: new Blob([], { type: 'image/png'}),
             name: this.name,
@@ -28,7 +28,7 @@ class Transaction {
 /**
  * Simple class to represent the result of a blockchain transaction
  */
-class TransactionResult {
+export class TransactionResult {
     transaction: Transaction;
     success: boolean;
     hash: string = '';
@@ -48,4 +48,13 @@ class TransactionResult {
     }
 }
 
-export { Transaction, TransactionResult };
+export interface Metadata{
+    name: string;
+    description: string;
+    image: Blob;
+    properties: {
+        content: File;
+        type: string;
+    }
+}
+

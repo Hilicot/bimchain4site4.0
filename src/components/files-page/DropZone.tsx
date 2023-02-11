@@ -5,8 +5,10 @@ import BlockchainManager from "@app/blockchain/BlockchainManager";
 import {  useState } from 'react';
 import { FileTreeTableRow } from "./file-handling-utils";
 
-const DropZone = ({ data, setData }:any) => {
-    const chain = new BlockchainManager("NFT.Storage").getBlockchain();
+const DropZone = async ({ data, setData }:any) => {
+    const BM = new BlockchainManager("NFT.Storage");
+    await BM.init();
+    const chain = BM.getBlockchain();
     const [inDropZone, setInDropZone] = useState(false);
 
     // onDragEnter sets inDropZone to true

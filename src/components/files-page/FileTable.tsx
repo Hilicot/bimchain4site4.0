@@ -1,14 +1,13 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table } from 'components/common/Table/Table';
-import { TablePaginationConfig, Tooltip, Row } from 'antd';
-import { Key, DefaultRecordType } from 'rc-table/lib/interface';
+import { Tooltip, Row } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { useMounted } from '@app/hooks/useMounted';
 import { Status } from '@app/components/profile/profileCard/profileFormNav/nav/payments/paymentHistory/Status/Status';
 import { Button } from '@app/components/common/buttons/Button/Button';
 import { DownloadOutlined, LinkOutlined, SearchOutlined } from '@ant-design/icons';
 import { Transaction } from '@app/blockchain/Transaction';
 import BlockchainManager from '@app/blockchain/BlockchainManager';
+import Blockchain from '@app/blockchain/Blockchain';
 
 interface FilesProps {
   data: TreeTableRow[];
@@ -22,8 +21,15 @@ const initialPagination: Pagination = {
 
 export const FileTable: React.FC<FilesProps> = ({ data, setData }: any) => {
   const { t } = useTranslation();
-  const chain = new BlockchainManager("NFT.Storage").getBlockchain();
+  const [chain, setChain] = useState<Blockchain>();
+  const BM = new BlockchainManager("NFT.Storage");
   const [pagination, setPagination] = useState<Pagination>(initialPagination);
+
+  useEffect(() => {
+    BM.init().then((res) => {
+      setChain(res.getBlockchain());
+    })
+  }, []);
 
   const refreshData = () => setData([...data])
 
@@ -41,18 +47,26 @@ export const FileTable: React.FC<FilesProps> = ({ data, setData }: any) => {
 
   // to handle file uploads
   const uploadFile = async (item: TreeTableRow) => {
-    const transaction = new Transaction(item.file, "test1", "test2");
+    if (!chain){
+      console.error("Blockchain not initialized");
+      return;
+    }
+    const transaction = new Transaction(item.file, item.file.name, "");
+    const originalStatus = item.status;
     item.status = FileStatus.COMMITTING;
     // Refresh table
     refreshData();
     chain.commitTransaction(transaction)
       .then(res => {
-        console.log(res) // FIXME remove
         if (res.success)
           item.status = FileStatus.ON_CHAIN;
         else
           console.error("Failed to upload file to blockchain", res)
         // Refresh table
+        refreshData();
+      })
+      .catch(err => {
+        item.status = originalStatus;
         refreshData();
       });
 
@@ -107,7 +121,7 @@ export const FileTable: React.FC<FilesProps> = ({ data, setData }: any) => {
                 <Button type="text" icon={<DownloadOutlined />} size="small" />
               </Tooltip>
               {(item.status != FileStatus.ON_CHAIN && item.status != FileStatus.COMMITTING) ? (<Tooltip title="Save to Blockchain">
-                <Button type="text" icon={<LinkOutlined />} size="small" onClick={e => uploadFile(item)} />
+                <Button type="text" icon={<LinkOutlined />} size="small" onClick={e => uploadFile(item)} disabled={chain ? false : true}/>
               </Tooltip>)
                 : (<></>)}
             </Row>

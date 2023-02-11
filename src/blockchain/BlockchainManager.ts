@@ -19,6 +19,11 @@ class BlockchainManager {
     }
   }
 
+  public async init() {
+    await this.blockchain.init();
+    return this;
+  }
+
   public getBlockchain(): Blockchain {
     return this.blockchain;
   }
