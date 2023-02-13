@@ -10,19 +10,34 @@ import { UploadDragger } from '@app/components/common/Upload/Upload';
 import { DraggerIconWrapper, DraggerTitle, DraggerDescription } from './FilesPage.styles';
 import DropZone from '@app/components/files-page/DropZone';
 import * as SF from './FilesPage.styles';
-import { getFakeTreeTableData, TreeTableRow } from '@app/components/files-page/FileTable';
-import { FileTreeTableRow } from "@app/components/files-page/file-handling-utils";
+import { getFakeTreeTableData } from '@app/components/files-page/FileTable';
+import { FileProxy } from "@app/components/files-page/file-handling-utils";
+import Blockchain from '@app/blockchain/Blockchain';
+import BlockchainManager from '@app/blockchain/BlockchainManager';
 
 const FilesPage: React.FC = () => {
   const { t } = useTranslation();
+  const [files, setFiles] = useState<FileProxy[]>([]);
+  const [chain, setChain] = useState<Blockchain>(new Blockchain);
+  const BM = new BlockchainManager("NFT.Storage");
 
-  const [files, setFiles] = useState<TreeTableRow[]>([]);
-
-  // TODO remove fake data
   useEffect(() => {
-    getFakeTreeTableData().then((res) => {
-      setFiles(res);
-    });
+    // async IIFE
+    (async () => {
+      // add blockchain object
+      await BM.init()
+      await setChain(BM.getBlockchain());
+
+      // add data to table
+      // TODO remove fake data
+      const fake_data = await getFakeTreeTableData()
+      let res = fake_data;
+      
+      if (chain)
+        res = res.concat(await chain.getFiles())
+      setFiles(res)
+    })()
+    
   }, []);
 
   const uploadProps = {
@@ -30,7 +45,7 @@ const FilesPage: React.FC = () => {
     multiple: true,
     customRequest: (options: any) => {
       let file = options.file;
-      const row = new FileTreeTableRow(file);
+      const row = FileProxy.fromFile(file);
       setFiles([...files, row])
     },
     showUploadList: false
@@ -39,7 +54,7 @@ const FilesPage: React.FC = () => {
   const desktopLayout = (
     <Row>
       <SF.LeftSideCol xl={16} xxl={17} id="desktop-content">
-        <FileTable data={files} setData={setFiles} />
+        <FileTable data={files} setData={setFiles} chain={chain}/>
       </SF.LeftSideCol>
 
       <SF.RightSideCol xl={8} xxl={7}>

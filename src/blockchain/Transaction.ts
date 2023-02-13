@@ -4,13 +4,11 @@
 export class Transaction {
     obj: File;
     name: string;
-    description: string;
     result: TransactionResult;
     // TODO name of transaction = name of object?
-    constructor(obj: File, name: string, description: string) {
+    constructor(obj: File, name: string) {
         this.obj = obj;
         this.name = name;
-        this.description = description;
         this.result = new TransactionResult(this);
     }
 
@@ -18,7 +16,7 @@ export class Transaction {
         return {
             image: new Blob([], { type: 'image/png'}),
             name: this.name,
-            description: this.description,
+            description: ' - ',
             properties: { content: this.obj, type: this.obj.type }
         };
     }
@@ -50,8 +48,8 @@ export class TransactionResult {
 
 export interface Metadata{
     name: string;
-    description: string;
     image: Blob;
+    description:string;
     properties: {
         content: File;
         type: string;

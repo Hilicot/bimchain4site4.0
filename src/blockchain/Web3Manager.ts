@@ -41,6 +41,9 @@ export class Web3Manager {
         }
     }
 
+    /**
+     * Loads the smart contract
+     */
     async loadBlockchainData() {
         const web3 = win.web3
         // Load account
@@ -54,19 +57,26 @@ export class Web3Manager {
         } else {
             console.log('Marketplace contract not deployed to detected network.')
         }
-        console.log(this.CDEcontract)
     }
 
+    /**
+     * Proxy functions that interacts with the blockchain. It registers a file in the blockchain, given the transaction details
+     * @param transaction : Transaction
+     * @returns void
+     */
     async registerFile(transaction:Transaction) {
         if(!transaction || !transaction.result) throw new Error("Invalid transaction. Transaction or transaction result is null");
         if (!this.initialized) {
             await this.init();
         }
 
-        console.log("registering file", transaction)
-        return await this.CDEcontract.methods.registerFile(transaction.name, transaction.result.hash, transaction.description, transaction.result.url).send({ from: this.account })
+        return await this.CDEcontract.methods.registerFile(transaction.name, transaction.result.hash, transaction.result.url).send({ from: this.account })
     }
 
+    /**
+     * Proxy functions that interacts with the blockchain. It returns the list of files registered in the blockchain
+     * @returns list of files
+     */
     async getFiles() {
         if (!this.initialized) {
             await this.init();
@@ -74,10 +84,16 @@ export class Web3Manager {
         const fileCount = await this.CDEcontract.methods.fileCount().call()
         let files = []
         for (let i = 1; i <= fileCount; i++) {
-            const file = await this.CDEcontract.methods.files(i).call()
-            files.push(file)
+            const file = await this.CDEcontract.methods.getFile(i).call()
+            files.push({
+                name: file[0],
+                hash: file[1],
+                version: file[2],
+                url: file[3],
+                author: file[4]
+            })
         }
-        console.log(files)
         return files;
     }
+
 }

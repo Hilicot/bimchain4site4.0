@@ -20,24 +20,19 @@ class NFTStorageBlockchain extends Blockchain {
     constructor() {
         super();
         // create a new NFTStorage client using our API key
-        this.nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY })
+        this.nftstorage = new NFTStorage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDNlRjVCYzhBQTNCM0Y5NkFiRUE1NmM4NTc0YUU5QkEwM2RDZjcwNjEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY3NTcwMDA2NTMzMiwibmFtZSI6IkJJTWNoYWluNFNpdGU0LjBfTkZUU3RvcmFnZV9rZXkifQ.EHPfHU5PBzVtjTjeokAtIO-NdMyqhgOf4chgJt8Inf0" })
     }
 
     commitTransaction = async (transaction: Transaction) => {
         try {
-            console.log("starting transaction")
             // Upload file to IPFS network through NFT.Storage
             const result = await this.nftstorage.store(transaction.getMetadata());
             console.log(result)
             // Register the result of the transaction in the transaction object
             transaction.result.registerResult(true, result.ipnft, result.url);
-            console.log(transaction.result)
             // Register uploaded file to the blockchain
             await this.web3Manager.registerFile(transaction);
-            console.log("done")
 
-            const fs = await this.web3Manager.getFiles();
-            console.log(fs)
             return transaction.result;
         } catch (e) {
             console.error(e);

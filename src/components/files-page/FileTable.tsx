@@ -5,13 +5,15 @@ import { useTranslation } from 'react-i18next';
 import { Status } from '@app/components/profile/profileCard/profileFormNav/nav/payments/paymentHistory/Status/Status';
 import { Button } from '@app/components/common/buttons/Button/Button';
 import { DownloadOutlined, LinkOutlined, SearchOutlined } from '@ant-design/icons';
-import { Transaction } from '@app/blockchain/Transaction';
+import { Transaction, TransactionResult } from '@app/blockchain/Transaction';
 import BlockchainManager from '@app/blockchain/BlockchainManager';
 import Blockchain from '@app/blockchain/Blockchain';
+import { FileProxy, FileStatus } from './file-handling-utils';
 
 interface FilesProps {
-  data: TreeTableRow[];
-  setData: (data: TreeTableRow[]) => void;
+  data: FileProxy[];
+  setData: (data: FileProxy[]) => void;
+  chain: Blockchain;
 }
 
 const initialPagination: Pagination = {
@@ -19,17 +21,10 @@ const initialPagination: Pagination = {
   pageSize: 20,
 };
 
-export const FileTable: React.FC<FilesProps> = ({ data, setData }: any) => {
+export const FileTable: React.FC<FilesProps> = ({ data, setData, chain}: any) => {
   const { t } = useTranslation();
-  const [chain, setChain] = useState<Blockchain>();
-  const BM = new BlockchainManager("NFT.Storage");
-  const [pagination, setPagination] = useState<Pagination>(initialPagination);
 
-  useEffect(() => {
-    BM.init().then((res) => {
-      setChain(res.getBlockchain());
-    })
-  }, []);
+  const [pagination, setPagination] = useState<Pagination>(initialPagination);
 
   const refreshData = () => setData([...data])
 
@@ -46,29 +41,28 @@ export const FileTable: React.FC<FilesProps> = ({ data, setData }: any) => {
   };*/
 
   // to handle file uploads
-  const uploadFile = async (item: TreeTableRow) => {
+  const uploadFile = async (item: FileProxy) => {
     if (!chain){
       console.error("Blockchain not initialized");
       return;
     }
-    const transaction = new Transaction(item.file, item.file.name, "");
+  
+    const transaction = new Transaction(item.getFile(), item.name);
     const originalStatus = item.status;
     item.status = FileStatus.COMMITTING;
     // Refresh table
     refreshData();
     chain.commitTransaction(transaction)
-      .then(res => {
+      .then((res: TransactionResult) => {
         if (res.success)
           item.status = FileStatus.ON_CHAIN;
-        else
+        else{
           console.error("Failed to upload file to blockchain", res)
+          item.status = originalStatus;
+        }
         // Refresh table
         refreshData();
       })
-      .catch(err => {
-        item.status = originalStatus;
-        refreshData();
-      });
 
   };
 
@@ -147,121 +141,25 @@ export const FileTable: React.FC<FilesProps> = ({ data, setData }: any) => {
   );
 };
 
-// TODO move these interfaces to source of data
-export class FileStatus {
-  static readonly NULL = new FileStatus("", "");
-  static readonly LOCAL = new FileStatus("Local", "var(--warning-color)");
-  static readonly COMMITTING = new FileStatus("Committing...", "var(--primary-color)");
-  static readonly ON_CHAIN = new FileStatus("On Chain", "var(--success-color)");
-
-  private constructor(public readonly label: string, public readonly color: string) {
-  }
-
-  toString() {
-    return this.label;
-  }
-}
-
 interface Pagination {
   current?: number;
   pageSize?: number;
   total?: number;
 }
 
-interface BasicTableRow {
-  key: string;
-  name: string;
-  last_modified: Date;
-  version: number;
-  status: FileStatus;
-  file: File;
-}
-
-export interface TreeTableRow extends BasicTableRow {
-  children?: TreeTableRow[];
-}
-
-
 //TODO remove fake data
-export const getFakeTreeTableData = (): Promise<TreeTableRow[]> => {
-  return new Promise((res) =>
-    res([
-      {
-        key: "1",
-        name: 'Main Structure',
-        last_modified: new Date("2023/02/15"),
-        version: 1,
-        status: FileStatus.NULL,
-        file: new File([""], "test1"),
-        children: [
-          {
-            key: "11",
-            name: 'Floor 1',
-            last_modified: new Date("2023/02/01"),
-            version: 1,
-            status: FileStatus.LOCAL,
-            file: new File([""], "test1"),
-          },
-          {
-            key: "12",
-            name: 'Floor 2',
-            last_modified: new Date("2023/02/03"),
-            version: 2,
-            status: FileStatus.LOCAL,
-            file: new File([""], "test1"),
-            children: [
-              {
-                key: "121",
-                name: 'Room 1',
-                last_modified: new Date("2023/01/12"),
-                version: 1,
-                status: FileStatus.LOCAL,
-                file: new File([""], "test1"),
-              },
-            ],
-          },
-          {
-            key: "13",
-            name: 'Floor 3',
-            last_modified: new Date("2022/12/21"),
-            version: 4,
-            status: FileStatus.ON_CHAIN,
-            file: new File([""], "test1"),
-          },
-        ],
-      },
-      {
-        key: "200",
-        name: 'Outer Beams',
-        last_modified: new Date("2022/11/15"),
-        version: 3,
-        status: FileStatus.COMMITTING,
-        file: new File([""], "test1"),
-      },
-      {
-        key: "300",
-        name: 'Outer Beams 2',
-        last_modified: new Date("2022/12/21"),
-        version: 2,
-        status: FileStatus.ON_CHAIN,
-        file: new File([""], "test1"),
-      },
-      {
-        key: "400",
-        name: 'Pavement',
-        last_modified: new Date("2022/12/21"),
-        version: 2,
-        status: FileStatus.ON_CHAIN,
-        file: new File([""], "test1"),
-      },
-      {
-        key: "500",
-        name: 'Pavement 2',
-        last_modified: new Date("2022/12/22"),
-        version: 2,
-        status: FileStatus.LOCAL,
-        file: new File([""], "test1"),
-      }
-    ],)
-  );
+export const getFakeTreeTableData = async (): Promise<FileProxy[]> => {
+  
+    const f1 = new FileProxy("Main Structure", new Date("2023/02/15"), 1, FileStatus.NULL);
+    const f11 = new FileProxy("Floor 1", new Date("2023/02/01"), 1, FileStatus.LOCAL);
+    const f12 = new FileProxy("Floor 2", new Date("2023/02/03"), 2, FileStatus.LOCAL);
+    const f121 = new FileProxy("Room 1", new Date("2023/02/03"), 1, FileStatus.LOCAL);
+    const f13 = new FileProxy("Floor 3", new Date("2022/12/21"), 1, FileStatus.ON_CHAIN);
+    const f4 = new FileProxy("Outer Beams", new Date("2022/11/15"), 2, FileStatus.ON_CHAIN);
+    const f5 = new FileProxy("Outer Beams 2", new Date("2022/12/21"), 2, FileStatus.ON_CHAIN);
+    const f6 = new FileProxy("Pavement", new Date("2022/12/21"), 3, FileStatus.LOCAL);
+
+    f12.children = [f121];
+    f1.children = [f11, f12, f13];
+    return [f1, f4, f5, f6]
 };
