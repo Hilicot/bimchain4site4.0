@@ -66,6 +66,11 @@ export const FileTable: React.FC<FilesProps> = ({ data, setData, chain}: any) =>
 
   };
 
+  const downloadFile = async (item: FileProxy) => {
+    if (chain)
+      chain.downloadFile(item)
+  }
+
   const columns = [
     {
       title: t('common.name'),
@@ -112,7 +117,7 @@ export const FileTable: React.FC<FilesProps> = ({ data, setData, chain}: any) =>
           <div>
             <Row>
               <Tooltip title="Download">
-                <Button type="text" icon={<DownloadOutlined />} size="small" />
+                <Button type="text" icon={<DownloadOutlined />} size="small" onClick={e=>downloadFile(item)}/>
               </Tooltip>
               {(item.status != FileStatus.ON_CHAIN && item.status != FileStatus.COMMITTING) ? (<Tooltip title="Save to Blockchain">
                 <Button type="text" icon={<LinkOutlined />} size="small" onClick={e => uploadFile(item)} disabled={chain ? false : true}/>

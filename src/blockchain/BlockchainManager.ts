@@ -1,5 +1,6 @@
 import Blockchain from './Blockchain';
 import NFTStorageBlockchain from './NFT.Storage/NFTStorageBlockchain';
+import Web3StorageBlockchain from './IPFS/Web3StorageBlockchain';
 
 /**
  * BlockchainManager
@@ -13,6 +14,9 @@ class BlockchainManager {
     switch (blockchain_type) {
         case 'NFT.Storage':
             this.blockchain = new NFTStorageBlockchain();
+            break;
+        case 'Web4Storage':
+            this.blockchain = new Web3StorageBlockchain();
             break;
         default:
             throw new Error('Blockchain type not supported');

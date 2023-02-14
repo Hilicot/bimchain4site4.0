@@ -2,13 +2,12 @@ import React from 'react';
 import { Row } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
-import { UploadOutlined, InboxOutlined } from '@ant-design/icons';
+import { InboxOutlined } from '@ant-design/icons';
 import * as S from '@app/pages/uiComponentsPages//UIComponentsPage.styles';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import { FileTable } from '@app/components/files-page/FileTable';
 import { UploadDragger } from '@app/components/common/Upload/Upload';
 import { DraggerIconWrapper, DraggerTitle, DraggerDescription } from './FilesPage.styles';
-import DropZone from '@app/components/files-page/DropZone';
 import * as SF from './FilesPage.styles';
 import { getFakeTreeTableData } from '@app/components/files-page/FileTable';
 import { FileProxy } from "@app/components/files-page/file-handling-utils";
@@ -34,7 +33,7 @@ const FilesPage: React.FC = () => {
       let res = fake_data;
       
       if (chain)
-        res = res.concat(await chain.getFiles())
+        res = res.concat(await chain.fetchRemoteFiles())
       setFiles(res)
     })()
     

@@ -13,7 +13,7 @@ import('./NFT.Storage_key.js').then((key) => {
     console.log('NFT_STORAGE_KEY not found. Please create a file named NFT.Storage_key.js in the same directory as this file and paste your NFT.Storage API key in it. See https://nft.storage/ for more information.')
 });
 
-
+// TODO merge with Web4Storage
 class NFTStorageBlockchain extends Blockchain {
     // @ts-ignore
     nftstorage: NFTStorage;

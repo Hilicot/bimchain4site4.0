@@ -1,4 +1,5 @@
 import { FileProxy, FileStatus } from '@app/components/files-page/file-handling-utils';
+import { IPFSManager } from './IPFS/IPFSManager';
 import { Transaction } from './Transaction'
 import { Web3Manager } from './Web3Manager';
 
@@ -7,8 +8,10 @@ import { Web3Manager } from './Web3Manager';
  */
 class Blockchain {
     protected web3Manager: Web3Manager;
+    protected ipfs: IPFSManager;
     constructor() {
         this.web3Manager = Web3Manager.getInstance();
+        this.ipfs = IPFSManager.getInstance();
     }
 
     public async init() {
@@ -16,14 +19,20 @@ class Blockchain {
         return;
     }
 
-    commitTransaction(transaction: Transaction): Promise<any>{
+    async commitTransaction(transaction: Transaction): Promise<any>{
         throw new Error("Method not implemented.");
     }
 
-    public async getFiles(): Promise<FileProxy[]> {
+    public async fetchRemoteFiles(): Promise<FileProxy[]> {
         const files = await this.web3Manager.getFiles();
-        //TODO implemento meglio
-        return files.map(f => FileProxy.fromUrl(f.name, f.hash, f.version, f.url, f.author));
+
+        return files.map(f => {
+            return FileProxy.fromUrl(f.name, f.hash, f.version, f.url, f.author)
+        });
+    }
+
+    public async downloadFile(file: FileProxy) {
+        this.ipfs.downloadFile(file);
     }
 }
 

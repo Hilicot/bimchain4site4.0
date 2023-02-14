@@ -15,7 +15,7 @@ contract CDE {
     address author;
   }
 
-  constructor() {
+  constructor() public {
     name = 'CDE';
   }
 
