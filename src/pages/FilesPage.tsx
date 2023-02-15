@@ -31,12 +31,12 @@ const FilesPage: React.FC = () => {
       // TODO remove fake data
       const fake_data = await getFakeTreeTableData()
       let res = fake_data;
-      
+
       if (chain)
         res = res.concat(await chain.fetchRemoteFiles())
       setFiles(res)
     })()
-    
+
   }, []);
 
   const uploadProps = {
@@ -53,7 +53,7 @@ const FilesPage: React.FC = () => {
   const desktopLayout = (
     <Row>
       <SF.LeftSideCol xl={16} xxl={17} id="desktop-content">
-        <FileTable data={files} setData={setFiles} chain={chain}/>
+        <FileTable data={files} setData={setFiles} chain={chain} />
       </SF.LeftSideCol>
 
       <SF.RightSideCol xl={8} xxl={7}>

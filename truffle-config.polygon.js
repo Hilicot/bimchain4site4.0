@@ -8,18 +8,23 @@ const infuraProjectId = process.env["INFURA_PROJECT_ID"];
 module.exports = {
   networks: {
     mumbai:{
-      provider: () => new HDWalletProvider(process.env.MNEMONIC, ` https://rpc-mumbai.maticvigil.com`),
+      provider: () => new HDWalletProvider({
+        mnemonic: {
+          phrase: mnemonic
+        },
+        providerOrUrl:
+         "https://polygon-mumbai.g.alchemy.com/v2/" + alchemyKey
+      }),
       network_id: 80001,
       confirmations: 2,
       timeoutBlocks: 200,
       skipDryRun: true,
-      gas: 6000000,
-      gasPrice: 10000000000,
+      chainId: 80001
     },
   },
   migrations_directory: './migrations/polygon',
   contracts_directory: './src/blockchain/contracts/',
-  contracts_build_directory: './src/blockchain/built_contracts/',
+  contracts_build_directory: './src/blockchain/built_contracts',
   compilers: {
     solc: {
       optimizer: {
