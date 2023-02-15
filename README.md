@@ -22,9 +22,9 @@
 1. create a `.env` file with the following content:
     ```bash
     # API Key for NFT.Storage. Get it from the NFT.Storage website
-    NFT_STORAGE_API_KEY="" 
+    REACT_APP_NFT_STORAGE_API_KEY="" 
     # API Key for Web3. Get it from the Web3.Storage website (requires free account)
-    WEB3_API_KEY=""
+    REACT_APP_WEB3_API_KEY=""
 
     # mnemonic phrase of your Metamask account
     MNEMONIC=""

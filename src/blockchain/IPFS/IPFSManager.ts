@@ -4,7 +4,7 @@ import fileDownload from 'js-file-download';
 require('dotenv').config(); // Load .env file
 
 // import Web3 API key from .env
-const WEB3_API_KEY = process.env.WEB3_API_KEY;
+const WEB3_API_KEY = process.env.REACT_APP_WEB3_API_KEY;
 
 export class IPFSManager {
   private static instance: IPFSManager;
@@ -23,20 +23,14 @@ export class IPFSManager {
   }
 
   public async downloadFile(file: FileProxy) {
-    // Fetch file name through the metadata
-    const metadata = await fetchMetadata("https://nftstorage.link/ipfs/" + file.hash + "/metadata.json");
-    const cid = metadata.attributes.content.split("/")[2]
+    if(!file.url)
+      throw new Error("File URL is not defined")
+    console.log("File URL: " + file.url)
+    const cid = file.url.split("/")[2]
     // Download file
-    downloadSingleFileFromURL("https://" + cid + ".ipfs.nftstorage.link/" + metadata.name, metadata.name)
+    downloadSingleFileFromURL("https://" + cid + ".ipfs.nftstorage.link/" + file.name, file.name)
   }
 
-}
-
-async function fetchMetadata(url: string) {
-  const res = await fetch(url);
-  const blob = await res.blob();
-  const text = await blob.text();
-  return JSON.parse(text)
 }
 
 async function downloadSingleFileFromURL(url: string, name: string) {

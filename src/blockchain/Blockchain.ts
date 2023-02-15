@@ -1,12 +1,12 @@
 import { FileProxy, FileStatus } from '@app/components/files-page/file-handling-utils';
 import { IPFSManager } from './IPFS/IPFSManager';
-import { Transaction } from './Transaction'
+import { Transaction, TransactionResult } from './Transaction'
 import { Web3Manager } from './Web3Manager';
 
 /**
  * Template class for blockchain implementations.
  */
-class Blockchain {
+abstract class Blockchain {
     protected web3Manager: Web3Manager;
     protected ipfs: IPFSManager;
     constructor() {
@@ -19,9 +19,20 @@ class Blockchain {
         return;
     }
 
-    async commitTransaction(transaction: Transaction): Promise<any>{
-        throw new Error("Method not implemented.");
+    async commitTransaction(transaction: Transaction): Promise<TransactionResult>{
+        // Upload file to IPFS
+        transaction = await this.uploadFile(transaction);
+        // Register uploaded file to the blockchain
+        await this.web3Manager.registerFile(transaction);
+        return transaction.result;
     }
+
+    /**
+     * Upload file to the database. 
+     * @param transaction 
+     * @returns transaction, which includes the url of the uploaded file
+     */
+    abstract uploadFile(transaction: Transaction) : Promise<Transaction>
 
     public async fetchRemoteFiles(): Promise<FileProxy[]> {
         const files = await this.web3Manager.getFiles();

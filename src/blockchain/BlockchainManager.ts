@@ -1,5 +1,5 @@
 import Blockchain from './Blockchain';
-import NFTStorageBlockchain from './NFT.Storage/NFTStorageBlockchain';
+import NFTStorageBlockchain from './IPFS/NFTStorageBlockchain';
 import Web3StorageBlockchain from './IPFS/Web3StorageBlockchain';
 
 /**

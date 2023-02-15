@@ -13,11 +13,12 @@ import { getFakeTreeTableData } from '@app/components/files-page/FileTable';
 import { FileProxy } from "@app/components/files-page/file-handling-utils";
 import Blockchain from '@app/blockchain/Blockchain';
 import BlockchainManager from '@app/blockchain/BlockchainManager';
+import NFTStorageBlockchain from '@app/blockchain/IPFS/NFTStorageBlockchain';
 
 const FilesPage: React.FC = () => {
   const { t } = useTranslation();
   const [files, setFiles] = useState<FileProxy[]>([]);
-  const [chain, setChain] = useState<Blockchain>(new Blockchain);
+  const [chain, setChain] = useState<Blockchain>(new NFTStorageBlockchain);
   const BM = new BlockchainManager("NFT.Storage");
 
   useEffect(() => {
