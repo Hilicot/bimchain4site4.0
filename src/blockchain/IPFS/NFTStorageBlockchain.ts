@@ -2,16 +2,10 @@
 import { NFTStorage } from 'nft.storage/dist/bundle.esm.min.js'
 import { Transaction, TransactionResult } from '../Transaction';
 import Blockchain from '../Blockchain';
+require('dotenv').config(); // Load .env file
 
 // import NFT.Storage API key
-// TODO read API key in a better way? centralized config file?
-let NFT_STORAGE_KEY: string;
-import('./NFT.Storage_key.js').then((key) => {
-    NFT_STORAGE_KEY = key.default;
-}).catch((e) => {
-    console.log(e)
-    console.log('NFT_STORAGE_KEY not found. Please create a file named NFT.Storage_key.js in the same directory as this file and paste your NFT.Storage API key in it. See https://nft.storage/ for more information.')
-});
+const NFT_STORAGE_API_KEY = process.env.NFT_STORAGE_API_KEY;
 
 // TODO merge with Web4Storage
 class NFTStorageBlockchain extends Blockchain {
@@ -20,7 +14,7 @@ class NFTStorageBlockchain extends Blockchain {
     constructor() {
         super();
         // create a new NFTStorage client using our API key
-        this.nftstorage = new NFTStorage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDNlRjVCYzhBQTNCM0Y5NkFiRUE1NmM4NTc0YUU5QkEwM2RDZjcwNjEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY3NTcwMDA2NTMzMiwibmFtZSI6IkJJTWNoYWluNFNpdGU0LjBfTkZUU3RvcmFnZV9rZXkifQ.EHPfHU5PBzVtjTjeokAtIO-NdMyqhgOf4chgJt8Inf0" })
+        this.nftstorage = new NFTStorage({ token: NFT_STORAGE_API_KEY })
     }
 
     commitTransaction = async (transaction: Transaction) => {

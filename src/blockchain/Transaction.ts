@@ -17,7 +17,7 @@ export class Transaction {
             image: new Blob([], { type: 'image/png'}),
             name: this.name,
             description: ' - ',
-            properties: { content: this.obj, type: this.obj.type }
+            attributes: { content: this.obj, type: this.obj.type }
         };
     }
 }
@@ -50,7 +50,7 @@ export interface Metadata{
     name: string;
     image: Blob;
     description:string;
-    properties: {
+    attributes: {
         content: File;
         type: string;
     }
