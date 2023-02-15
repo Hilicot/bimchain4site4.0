@@ -35,3 +35,6 @@ yarn-error.log*
 
 # sensitive files
 src/blockchain/NFT.Storage/NFT.Storage_key*
+
+#blockchain
+src/blockchain/built_contracts

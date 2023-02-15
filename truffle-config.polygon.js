@@ -3,7 +3,7 @@ const HDWalletProvider = require('@truffle/hdwallet-provider');
 // like the mnemomic and Infura project key below. Note: .env is ignored by git to keep your private information safe
 require('dotenv').config();
 const mnemonic = process.env["MNEMONIC"];
-const infuraProjectId = process.env["INFURA_PROJECT_ID"];
+const alchemyKey = process.env["ALCHEMY_KEY"];
 
 module.exports = {
   networks: {

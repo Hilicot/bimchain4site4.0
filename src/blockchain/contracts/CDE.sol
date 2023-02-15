@@ -58,4 +58,10 @@ contract CDE {
     File memory file = files[_id];
     return (file.name, file.hash, file.version, file.url, file.author);
   }
+
+  // function to interact with OpenSea
+  function tokenURI(uint256 _tokenId) public view returns (string memory) {
+    int index = int(_tokenId);
+    return files[index].url;
+  }
 }
