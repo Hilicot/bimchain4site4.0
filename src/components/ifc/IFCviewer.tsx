@@ -13,7 +13,7 @@ import { BorderLeftOutlined } from '@ant-design/icons';
 let viewer: IfcViewerAPI;
 
 interface IFCviewerProps {
-  file: FileProxy
+  file: FileProxy|null
 }
 
 export const IFCviewer: React.FC<IFCviewerProps> = ({ file }) => {
@@ -30,7 +30,6 @@ export const IFCviewer: React.FC<IFCviewerProps> = ({ file }) => {
   );
 
   const loadIFCViewer = async () => {
-    setLoading(true);
     if (!file)
       return
     const f = await file.getFile();
@@ -40,6 +39,7 @@ export const IFCviewer: React.FC<IFCviewerProps> = ({ file }) => {
       return;
     }
 
+    setLoading(true);
     viewer = new IfcViewerAPI({ container, backgroundColor: new Color(0xccccd0), });
     viewer.axes.setAxes();
     viewer.grid.setGrid();

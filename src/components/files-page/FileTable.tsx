@@ -125,6 +125,7 @@ export const FileTable: React.FC<FilesProps> = ({ data, setData, chain, setViewe
                 <Button type="text" icon={<DownloadOutlined />} size="small" onClick={e=>downloadFile(item)}/>
               </Tooltip>
               {/* TODO replace with double click?*/}
+              {/* TODO restrict viewer to IFC only, or build new viewers*/}
               <Tooltip title="View File">
                   <Button type="text" icon={<EyeOutlined />} size="small" onClick={e=>{setViewedIFCfile(item)}}/>
               </Tooltip>

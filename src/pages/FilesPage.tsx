@@ -58,7 +58,7 @@ const FilesPage: React.FC = () => {
     <Row>
       <SF.LeftSideCol xl={16} xxl={17} id="desktop-content">
         <FileTable data={files} setData={setFiles} chain={chain} setViewedIFCfile={setViewedIFCfile}/>
-        <IFCviewerModal file={files[files.length -1]} viewedIFCfile={viewedIFCfile} setViewedIFCfile={setViewedIFCfile}/>
+        <IFCviewerModal viewedIFCfile={viewedIFCfile} setViewedIFCfile={setViewedIFCfile}/>
       </SF.LeftSideCol>
 
       <SF.RightSideCol xl={8} xxl={7}>

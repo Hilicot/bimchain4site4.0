@@ -3,16 +3,15 @@ import { FileProxy } from '../files-page/file-handling-utils';
 import { IFCviewer } from './IFCviewer';
 
 interface IFCviewerModalProps {
-  file: FileProxy,
   viewedIFCfile: FileProxy | null,
   setViewedIFCfile: (viewedIFCfile: FileProxy | null) => void,
 }
 
-export const IFCviewerModal: React.FC<IFCviewerModalProps> = ({ file, viewedIFCfile, setViewedIFCfile }) => {
+export const IFCviewerModal: React.FC<IFCviewerModalProps> = ({ viewedIFCfile, setViewedIFCfile }) => {
 
   return (
       <Modal
-        title={"ciao"}
+        title={viewedIFCfile?.name}
         centered={true}
         keyboard={false /* disable esc key to close modal*/}
         open={viewedIFCfile !== null}
@@ -20,13 +19,14 @@ export const IFCviewerModal: React.FC<IFCviewerModalProps> = ({ file, viewedIFCf
         onCancel={() => setViewedIFCfile(null)}
         width={'100%'}
         size="large"
+        destroyOnClose={true}
         bodyStyle={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center'
       }}
       >
-        <IFCviewer file={file} />
+        <IFCviewer file={viewedIFCfile} />
       </Modal>
   );
 }
