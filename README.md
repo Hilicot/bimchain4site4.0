@@ -31,3 +31,22 @@
     # API key of your free Alchemy account
     ALCHEMY_KEY=""
     ```
+
+### Documentation
+
+#### Blockchain
+
+The application supports both the Ethereum and Polygon blockchains, using Metamask and the Truffle framework as the Solidity smart-contract compiler.
+The respective truffle configuration files are [`truffle_config.js`](./truffle-config.js) and [`truffle-config.polygon.js`](./truffle-config.polygon.js).
+To build and deploy, run 
+```bash
+truffle compile --config=<config_file> [--network=<network>]
+truffle migrate --config=<config_file> [--network=<network>]
+```
+For testing, the configuration files support the Ganache and Mumbai testnets
+
+#### IFC viewer
+
+Uses the [IFCjs](https://github.com/IFCjs) framework, specifically the [web-ifc-viewer](https://github.com/IFCjs/web-ifc-viewer) library.
+
+

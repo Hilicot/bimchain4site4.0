@@ -4,16 +4,19 @@ import { Tooltip, Row } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { Status } from '@app/components/profile/profileCard/profileFormNav/nav/payments/paymentHistory/Status/Status';
 import { Button } from '@app/components/common/buttons/Button/Button';
-import { DownloadOutlined, LinkOutlined, SearchOutlined } from '@ant-design/icons';
+import { DeploymentUnitOutlined, DownloadOutlined, EyeOutlined, LinkOutlined, SearchOutlined } from '@ant-design/icons';
 import { Transaction, TransactionResult } from '@app/blockchain/Transaction';
 import BlockchainManager from '@app/blockchain/BlockchainManager';
 import Blockchain from '@app/blockchain/Blockchain';
 import { FileProxy, FileStatus } from './file-handling-utils';
+import { Link, useNavigate } from 'react-router-dom';
+import { IFCviewer } from '../ifc/IFCviewer';
 
 interface FilesProps {
   data: FileProxy[];
   setData: (data: FileProxy[]) => void;
   chain: Blockchain;
+  setViewedIFCfile: (viewedIFCfile: FileProxy|null) => void;
 }
 
 const initialPagination: Pagination = {
@@ -21,8 +24,9 @@ const initialPagination: Pagination = {
   pageSize: 20,
 };
 
-export const FileTable: React.FC<FilesProps> = ({ data, setData, chain}: any) => {
+export const FileTable: React.FC<FilesProps> = ({ data, setData, chain, setViewedIFCfile}: any) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const [pagination, setPagination] = useState<Pagination>(initialPagination);
 
@@ -46,8 +50,9 @@ export const FileTable: React.FC<FilesProps> = ({ data, setData, chain}: any) =>
       console.error("Blockchain not initialized");
       return;
     }
-  
-    const transaction = new Transaction(item.getFile(), item.name);
+    
+    const file = await item.getFile();
+    const transaction = new Transaction(file, item.name);
     const originalStatus = item.status;
     item.status = FileStatus.COMMITTING;
     // Refresh table
@@ -118,6 +123,10 @@ export const FileTable: React.FC<FilesProps> = ({ data, setData, chain}: any) =>
             <Row>
               <Tooltip title="Download">
                 <Button type="text" icon={<DownloadOutlined />} size="small" onClick={e=>downloadFile(item)}/>
+              </Tooltip>
+              {/* TODO replace with double click?*/}
+              <Tooltip title="View File">
+                  <Button type="text" icon={<EyeOutlined />} size="small" onClick={e=>{setViewedIFCfile(item)}}/>
               </Tooltip>
               {(item.status != FileStatus.ON_CHAIN && item.status != FileStatus.COMMITTING) ? (<Tooltip title="Save to Blockchain">
                 <Button type="text" icon={<LinkOutlined />} size="small" onClick={e => uploadFile(item)} disabled={chain ? false : true}/>

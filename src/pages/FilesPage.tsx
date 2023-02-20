@@ -14,11 +14,14 @@ import { FileProxy } from "@app/components/files-page/file-handling-utils";
 import Blockchain from '@app/blockchain/Blockchain';
 import BlockchainManager from '@app/blockchain/BlockchainManager';
 import NFTStorageBlockchain from '@app/blockchain/IPFS/NFTStorageBlockchain';
+import {IFCviewerModal} from '@app/components/ifc/IFCviewerModal';
 
 const FilesPage: React.FC = () => {
   const { t } = useTranslation();
   const [files, setFiles] = useState<FileProxy[]>([]);
   const [chain, setChain] = useState<Blockchain>(new NFTStorageBlockchain);
+  // TODO remove modal?
+  const [viewedIFCfile, setViewedIFCfile] = useState<FileProxy|null>(null);
   const BM = new BlockchainManager("NFT.Storage");
 
   useEffect(() => {
@@ -54,7 +57,8 @@ const FilesPage: React.FC = () => {
   const desktopLayout = (
     <Row>
       <SF.LeftSideCol xl={16} xxl={17} id="desktop-content">
-        <FileTable data={files} setData={setFiles} chain={chain} />
+        <FileTable data={files} setData={setFiles} chain={chain} setViewedIFCfile={setViewedIFCfile}/>
+        <IFCviewerModal file={files[files.length -1]} viewedIFCfile={viewedIFCfile} setViewedIFCfile={setViewedIFCfile}/>
       </SF.LeftSideCol>
 
       <SF.RightSideCol xl={8} xxl={7}>

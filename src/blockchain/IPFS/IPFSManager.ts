@@ -25,7 +25,6 @@ export class IPFSManager {
   public async downloadFile(file: FileProxy) {
     if(!file.url)
       throw new Error("File URL is not defined")
-    console.log("File URL: " + file.url)
     const cid = file.url.split("/")[2]
     // Download file
     downloadSingleFileFromURL("https://" + cid + ".ipfs.nftstorage.link/" + file.name, file.name)
