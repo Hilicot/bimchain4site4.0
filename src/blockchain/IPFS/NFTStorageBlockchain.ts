@@ -1,4 +1,3 @@
-// Import the NFTStorage class from the 'nft.storage' package
 import { NFTStorage } from 'nft.storage/dist/bundle.esm.min.js'
 import { Transaction } from '../Transaction';
 import Blockchain from '../Blockchain';
@@ -8,6 +7,7 @@ require('dotenv').config(); // Load .env file
 const NFT_STORAGE_API_KEY = process.env.REACT_APP_NFT_STORAGE_API_KEY;
 
 class NFTStorageBlockchain extends Blockchain {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     nftstorage: NFTStorage;
     constructor() {

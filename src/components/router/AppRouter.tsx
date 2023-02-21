@@ -4,10 +4,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // no lazy loading for auth pages to avoid flickering
 const AuthLayout = React.lazy(() => import('@app/components/layouts/AuthLayout/AuthLayout'));
 import LoginPage from '@app/pages/LoginPage';
-import SignUpPage from '@app/pages/SignUpPage';
-import ForgotPasswordPage from '@app/pages/ForgotPasswordPage';
-import NewPasswordPage from '@app/pages/NewPasswordPage';
-import LockPage from '@app/pages/LockPage';
 
 import MainLayout from '@app/components/layouts/main/MainLayout/MainLayout';
 import RequireAuth from '@app/components/router/RequireAuth';
@@ -46,17 +42,6 @@ export const AppRouter: React.FC = () => {
         </Route>
         <Route path="/auth" element={<AuthLayoutFallback />}>
           <Route path="login" element={<LoginPage />} />
-          <Route path="sign-up" element={<SignUpPage />} />
-          <Route
-            path="lock"
-            element={
-              <RequireAuth>
-                <LockPage />
-              </RequireAuth>
-            }
-          />
-          <Route path="forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="new-password" element={<NewPasswordPage />} />
         </Route>
         <Route path="/logout" element={<LogoutFallback />} />
       </Routes>

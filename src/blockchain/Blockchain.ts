@@ -1,4 +1,4 @@
-import { FileProxy, FileStatus } from '@app/components/files-page/file-handling-utils';
+import { FileProxy } from '@app/components/files-page/file-handling-utils';
 import { IPFSManager } from './IPFS/IPFSManager';
 import { Transaction, TransactionResult } from './Transaction'
 import { Web3Manager } from './Web3Manager';

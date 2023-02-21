@@ -8,11 +8,11 @@ export class FileStatus {
     private constructor(public readonly label: string, public readonly color: string) {
     }
 
-    toString() {
+    toString(): string {
         return this.label;
     }
 
-    static fromObject(obj: any): FileStatus {
+    static fromObject(obj: Record<string, unknown>): FileStatus {
         for (const key in FileStatus) {
             // @ts-ignore
             if (FileStatus[key] instanceof FileStatus && obj.label === FileStatus[key].label) {

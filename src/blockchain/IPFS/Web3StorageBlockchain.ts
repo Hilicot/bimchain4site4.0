@@ -1,4 +1,4 @@
-import { Transaction, TransactionResult } from '../Transaction';
+import { Transaction } from '../Transaction';
 import Blockchain from '../Blockchain';
 
 

@@ -1,4 +1,4 @@
-import { Modal, InfoModal, SuccessModal, WarningModal, ErrorModal } from '@app/components/common/Modal/Modal';
+import { Modal } from '@app/components/common/Modal/Modal';
 import { FileProxy } from '../files-page/file-handling-utils';
 import { IFCviewer } from './IFCviewer';
 

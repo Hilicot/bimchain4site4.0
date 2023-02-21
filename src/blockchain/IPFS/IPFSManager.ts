@@ -8,6 +8,7 @@ const WEB3_API_KEY = process.env.REACT_APP_WEB3_API_KEY;
 
 export class IPFSManager {
   private static instance: IPFSManager;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   public web3storage: Web3Storage;
 

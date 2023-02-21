@@ -1,8 +1,8 @@
 import Web3 from 'web3';
 import CDE from './built_contracts/CDE.json';
-import { Metadata, Transaction } from './Transaction';
+import { Transaction } from './Transaction';
 
-let win:any = <any>window; 
+const win:any = <any>window; 
 
 export class Web3Manager {
     private static instance: Web3Manager;
@@ -28,7 +28,7 @@ export class Web3Manager {
         this.initialized = true;
     }
 
-    async loadWeb3() {
+    async loadWeb3(): Promise<void> {
         if (win.ethereum) {
             win.web3 = new Web3(win.ethereum)
             await win.ethereum.enable()
@@ -44,14 +44,20 @@ export class Web3Manager {
     /**
      * Loads the smart contract
      */
-    async loadBlockchainData() {
+    async loadBlockchainData(): Promise<void> {
         const web3 = win.web3
         // Load account
-        const accounts = await web3.eth.getAccounts()
+        let accounts;
+        try{
+            accounts = await web3.eth.getAccounts()
+        }catch(e){
+            console.error(e)
+            return
+        }
         this.account = accounts[0]
         const networkId = await web3.eth.net.getId()
         // @ts-ignore
-        const networkData = CDE.networks[networkId]
+        const networkData = CDE.networks[networkId] 
         if (networkData) {
             this.CDEcontract = new web3.eth.Contract(CDE.abi, networkData.address)
         } else {
@@ -82,7 +88,7 @@ export class Web3Manager {
             await this.init();
         }
         const fileCount = await this.CDEcontract.methods.fileCount().call()
-        let files = []
+        const files = []
         for (let i = 1; i <= fileCount; i++) {
             const file = await this.CDEcontract.methods.getFile(i).call()
             files.push({

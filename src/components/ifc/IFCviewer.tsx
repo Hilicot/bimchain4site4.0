@@ -1,5 +1,5 @@
 import { useMounted } from '@app/hooks/useMounted';
-import { Component, RefObject, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { IfcViewerAPI } from 'web-ifc-viewer';
 import { Color } from "three";
 import { IFCSPACE, IFCOPENINGELEMENT } from 'web-ifc';
@@ -21,15 +21,7 @@ export const IFCviewer: React.FC<IFCviewerProps> = ({ file }) => {
   const [loading, setLoading] = React.useState(false);
   const [isClipperActive, setIsClipperActive] = React.useState(false);
 
-  // load file
-  useEffect(
-    () => {
-      loadIFCViewer();
-    },
-    [isMounted],
-  );
-
-  const loadIFCViewer = async () => {
+  const loadIFCViewer = useCallback(async () => {
     if (!file)
       return
     const f = await file.getFile();
@@ -102,7 +94,15 @@ export const IFCviewer: React.FC<IFCviewerProps> = ({ file }) => {
     }
     console.log()
     setLoading(false);
-  }
+  },[file])
+
+    // load file
+    useEffect(
+      () => {
+        loadIFCViewer();
+      },
+      [isMounted, loadIFCViewer],
+    );
 
   const toggleClippingPlanes = () => {
     if(viewer)
@@ -113,7 +113,7 @@ export const IFCviewer: React.FC<IFCviewerProps> = ({ file }) => {
   return (
     <Spinner spinning={loading}>
       <Tooltip title="Clipping planes">
-        <Button type={isClipperActive ? "primary" : "ghost"} icon={<BorderLeftOutlined />} size="small" onClick={e => { toggleClippingPlanes() }} />
+        <Button type={isClipperActive ? "primary" : "ghost"} icon={<BorderLeftOutlined />} size="small" onClick={() => { toggleClippingPlanes() }} />
       </Tooltip>
       <div id="IFCviewer_canvas" style={{
         position: "relative",
