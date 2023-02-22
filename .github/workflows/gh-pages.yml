@@ -68,7 +68,7 @@ jobs:
         with:
           path: ./build
 
-  # Deployment job
+  # Deployment job to bumchain4site4.0
   deploy:
     environment:
       name: github-pages
