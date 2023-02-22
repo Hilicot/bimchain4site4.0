@@ -9,7 +9,6 @@ import { FileTable } from '@app/components/files-page/FileTable';
 import { UploadDragger } from '@app/components/common/Upload/Upload';
 import { DraggerIconWrapper, DraggerTitle, DraggerDescription } from './FilesPage.styles';
 import * as SF from './FilesPage.styles';
-import { getFakeTreeTableData } from '@app/components/files-page/FileTable';
 import { FileProxy } from "@app/components/files-page/file-handling-utils";
 import Blockchain from '@app/blockchain/Blockchain';
 import BlockchainManager from '@app/blockchain/BlockchainManager';
@@ -33,12 +32,9 @@ const FilesPage: React.FC = () => {
 
       // add data to table
       // TODO remove fake data
-      const fake_data = await getFakeTreeTableData()
-      let res = fake_data;
-
-      if (chain)
-        res = res.concat(await chain.fetchRemoteFiles())
-      setFiles(res)
+      // const fake_data = await getFakeTreeTableData()
+      // let res = fake_data;
+      setFiles(await chain.fetchRemoteFiles())
     }
     getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,4 +1,4 @@
-## TODO
+
 
 - implemento versionamento basandosi su nome?
 - Nella lista dei file, evidenziare se un file lo hai già visualizzato o no? (utile per evidenziare se sono state caricate nuove versioni)
@@ -13,7 +13,8 @@
 - [ ] Controlli su IFC (deve essere valido prima del caricamento)
 - [ ] supporto multiple file versions
 - [ ] Mostro differenze tra due versioni diverse in IFC viewer
-- [ ] Elimino warning di eslint 
+- [ ] Enable column sorting nella tabella
+- [x] Elimino warning di eslint 
 
 ----
 

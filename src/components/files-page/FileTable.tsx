@@ -147,6 +147,7 @@ interface Pagination {
 }
 
 //TODO remove fake data
+/*
 export const getFakeTreeTableData = async (): Promise<FileProxy[]> => {
   
     const f1 = new FileProxy("Main Structure", new Date("2023/02/15"), 1, FileStatus.NULL);
@@ -162,3 +163,4 @@ export const getFakeTreeTableData = async (): Promise<FileProxy[]> => {
     f1.children = [f11, f12, f13];
     return [f1, f4, f5, f6]
 };
+*/
