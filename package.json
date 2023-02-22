@@ -88,7 +88,7 @@
   "scripts": {
     "start": "yarn buildThemes && craco --openssl-legacy-provider start",
     "build": "yarn buildThemes && craco --openssl-legacy-provider build",
-    "buildCI": "yarn buildThemes && PUBLIC_URL='' && craco --max_old_space_size=4096 build",
+    "buildCI": "yarn buildThemes && PUBLIC_URL='bimchain4site4.0/..' && craco --max_old_space_size=4096 build",
     "test": "craco test",
     "eject": "craco eject",
     "lint": "eslint \"*/**/*.{js,ts,tsx}\" --fix",
