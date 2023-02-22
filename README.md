@@ -19,7 +19,7 @@
    declare module 'nft.storage/dist/bundle.esm.min.js'
    ```
 
-1. create a `.env` file with the following content:
+1. create/modify a `.env` file with the following content:
     ```bash
     # API Key for NFT.Storage. Get it from the NFT.Storage website
     REACT_APP_NFT_STORAGE_API_KEY="" 
