@@ -87,9 +87,8 @@
   },
   "scripts": {
     "start": "yarn buildThemes && craco --openssl-legacy-provider start",
-    "build": "yarn buildThemes && craco --openssl-legacy-provider build",
-    "buildCI": "yarn buildThemes && craco --max_old_space_size=4096 build",
-    "build:prod": "yarn buildThemes && craco --openssl-legacy-provider build",
+    "build": "yarn buildThemes && craco --max_old_space_size=4096 build",
+    "build:local": "yarn buildThemes && craco --openssl-legacy-provider build",
     "test": "craco test",
     "eject": "craco eject",
     "lint": "eslint \"*/**/*.{js,ts,tsx}\" --fix",
