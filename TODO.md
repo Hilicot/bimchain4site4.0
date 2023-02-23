@@ -8,7 +8,7 @@
 
 #### dev TODOs
 
-- [ ] Visualizzo solo file IFC
+- [x] Visualizzo solo file IFC
 - [ ] Controlli su IFC (deve essere valido prima del caricamento)
 - [ ] supporto multiple file versions
 - [ ] Mostro differenze tra due versioni diverse in IFC viewer

@@ -111,9 +111,11 @@ export const FileTable: React.FC<FilesProps> = ({ data, setData, chain, setViewe
               </Tooltip>
               {/* TODO replace with double click?*/}
               {/* TODO restrict viewer to IFC only, or build new viewers*/}
+              { item.name.split('.').pop() === "ifc" &&
               <Tooltip title="View File">
                   <Button type="text" icon={<EyeOutlined />} size="small" onClick={()=>{setViewedIFCfile(item)}}/>
               </Tooltip>
+              }
               {(item.status != FileStatus.ON_CHAIN && item.status != FileStatus.COMMITTING) ? (<Tooltip title="Save to Blockchain">
                 <Button type="text" icon={<LinkOutlined />} size="small" onClick={() => uploadFile(item)} disabled={chain ? false : true}/>
               </Tooltip>)
