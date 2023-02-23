@@ -11,6 +11,7 @@ import Blockchain from '@app/blockchain/Blockchain';
 import { FileProxy, FileStatus } from './file-handling-utils';
 
 interface FilesProps {
+  type: string;
   data: FileProxy[];
   setData: (data: FileProxy[]) => void;
   chain: Blockchain;
@@ -22,12 +23,19 @@ const initialPagination: Pagination = {
   pageSize: 20,
 };
 
-export const FileTable: React.FC<FilesProps> = ({ data, setData, chain, setViewedIFCfile}: any) => {
+export const FileTable: React.FC<FilesProps> = ({ type, data, setData, chain, setViewedIFCfile}: any) => {
   const { t } = useTranslation();
 
   const [pagination, setPagination] = useState<Pagination>(initialPagination);
 
   const refreshData = () => setData([...data])
+
+  const displayed_data = data.filter((item: FileProxy) => {
+    if (type === "on_chain")
+      return item.status === FileStatus.ON_CHAIN ;
+    else
+      return item.status !== FileStatus.ON_CHAIN;
+  })
 
   // to handle file uploads
   const uploadFile = async (item: FileProxy) => {
@@ -52,7 +60,7 @@ export const FileTable: React.FC<FilesProps> = ({ data, setData, chain, setViewe
         }
         // Refresh table
         refreshData();
-      })
+      }).catch((error:any) => console.log(error))
 
   };
 
@@ -131,7 +139,7 @@ export const FileTable: React.FC<FilesProps> = ({ data, setData, chain, setViewe
     <>
       <Table
         columns={columns}
-        dataSource={data}
+        dataSource={displayed_data}
         // @ts-ignore
         pagination={pagination}
         //loading={loading}

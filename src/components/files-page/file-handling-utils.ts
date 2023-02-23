@@ -34,6 +34,7 @@ export class FileProxy {
     file?: File;
     url?: string;
     author?: string;
+    previous_versions: FileProxy[] = [];
     children?: FileProxy[];
 
     public constructor(name: string, last_modified: Date, version: number, status: FileStatus) {

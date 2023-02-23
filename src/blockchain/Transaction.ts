@@ -29,8 +29,8 @@ export class Transaction {
 export class TransactionResult {
     transaction: Transaction;
     success: boolean;
-    hash: string = '';
-    url: string = '';
+    hash = '';
+    url = '';
     pending: boolean;
     constructor(transaction: Transaction) {
         this.transaction = transaction;

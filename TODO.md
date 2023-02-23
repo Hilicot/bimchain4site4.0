@@ -10,6 +10,7 @@
 
 - [x] Visualizzo solo file IFC
 - [ ] Controlli su IFC (deve essere valido prima del caricamento)
+- [ ] Register upload date inside contract
 - [ ] supporto multiple file versions
 - [ ] Mostro differenze tra due versioni diverse in IFC viewer
 - [ ] Enable column sorting nella tabella
@@ -19,5 +20,6 @@
 
 #### theory TODOs
 - [ ] Which file types (e.g. .txt, .ifc, .pdf...) do we need to support? (to view and see changes)
+- [ ] Add repository snapshots?
 
 

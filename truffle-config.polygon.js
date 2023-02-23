@@ -1,6 +1,4 @@
 const HDWalletProvider = require('@truffle/hdwallet-provider');
-// create a file at the root of your project and name it .env -- there you can set process variables
-// like the mnemomic and Infura project key below. Note: .env is ignored by git to keep your private information safe
 require('dotenv').config();
 const mnemonic = process.env["MNEMONIC"];
 const alchemyKey = process.env["ALCHEMY_KEY"];
@@ -22,7 +20,7 @@ module.exports = {
       chainId: 80001
     },
   },
-  migrations_directory: './migrations/polygon',
+  migrations_directory: './src/blockchain/migrations/polygon',
   contracts_directory: './src/blockchain/contracts/',
   contracts_build_directory: './src/blockchain/built_contracts',
   compilers: {

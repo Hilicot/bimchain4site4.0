@@ -1,6 +1,5 @@
 require('babel-register');
 require('babel-polyfill');
-const HDWalletProvider = require("@truffle/hdwallet-provider")
 require('dotenv').config(); // Load .env file
 
 module.exports = {
@@ -11,7 +10,7 @@ module.exports = {
       network_id: "*" 
     },
   },
-  migrations_directory: './migrations/ethereum',
+  migrations_directory: './src/blockchain/migrations/ethereum',
   contracts_directory: './src/blockchain/contracts/',
   contracts_build_directory: './src/blockchain/built_contracts',
   compilers: {
