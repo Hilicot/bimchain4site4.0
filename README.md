@@ -1,5 +1,7 @@
 # BIMchain4site4.0
 
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Hilicot/bimchain4site4.0/azure-static-web-apps-delightful-mushroom-03ad24f03.yml)
+
 ### Install
 
 1. run
