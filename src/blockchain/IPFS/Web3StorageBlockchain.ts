@@ -9,7 +9,8 @@ class Web3torageBlockchain extends Blockchain {
 
     uploadFile = async (transaction: Transaction) : Promise<Transaction> => {
         try {
-            const cid = await this.ipfs.web3storage.put([transaction.obj])
+            const file = await transaction.file.getFile();
+            const cid = await this.ipfs.web3storage.put([file])
             transaction.result.registerResult(true, cid, cid);
             return transaction;
         } catch (e) {
