@@ -1,23 +1,26 @@
+import { FileProxy } from "@app/components/files-page/file-handling-utils";
+
 /**
  * Simple class to represent a blockchain transaction
  */
 export class Transaction {
-    obj: File;
+    file: FileProxy;
     name: string;
     result: TransactionResult;
     // TODO name of transaction = name of object?
-    constructor(obj: File, name: string) {
-        this.obj = obj;
-        this.name = name;
+    constructor(file: FileProxy) {
+        this.file = file;
+        this.name = file.name+'_'+file.version;
         this.result = new TransactionResult(this);
     }
 
-    public getMetadata(): Metadata {
+    public async getMetadata(): Promise<Metadata> {
+        const obj = await this.file.getFile();
         return {
             image: new Blob([], { type: 'image/png'}),
             name: this.name,
             description: ' - ',
-            attributes: { content: this.obj, type: this.obj.type }
+            attributes: { content: obj, type: obj.type, version: this.file.version }
         };
     }
 }
@@ -53,6 +56,7 @@ export interface Metadata{
     attributes: {
         content: File;
         type: string;
+        version: number;
     }
 }
 

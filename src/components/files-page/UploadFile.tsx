@@ -5,12 +5,31 @@ import { FileProxy, FileStatus } from './file-handling-utils';
 import { useTranslation } from 'react-i18next';
 
 interface UploadFileProps {
-    files: FileProxy[];
-    setFiles: (files: FileProxy[]) => void;
+    setFiles: (files: FileProxy[] | ((oldFiles: FileProxy[]) => FileProxy[])) => void;
 }
 
-const UploadFile: React.FC<UploadFileProps> = ({ files, setFiles }) => {
+const UploadFile: React.FC<UploadFileProps> = ({ setFiles }) => {
     const { t } = useTranslation();
+
+    const updateFilesList = (file_proxy: FileProxy) => {
+        setFiles(oldFiles => {
+            let newFiles = [...oldFiles, file_proxy]
+            // check if the file is already present in the list of files. 
+            const oldCopies = oldFiles.filter(f => f.name === file_proxy.name)
+            const oldCopyOnChain = oldCopies.find(f => f.status === FileStatus.ON_CHAIN)
+            const oldCopyOffChain = oldCopies.find(f => f.status !== FileStatus.ON_CHAIN)
+            if (oldCopyOffChain){
+                // if there is an old copy of the file that is not on chain, remove it from the list and take its version number
+                file_proxy.version = oldCopyOffChain.version;
+                newFiles = newFiles.filter(f => f !== oldCopyOffChain)
+            }
+            else if (oldCopyOnChain) {
+                // if the file is already present on chain, just set the correct version number
+                file_proxy.version = oldCopyOnChain.version + 1;
+            }
+            return newFiles;
+        })
+    }
 
     // this object contains the config info for the upload component, including the upload function
     const uploadProps = {
@@ -21,18 +40,10 @@ const UploadFile: React.FC<UploadFileProps> = ({ files, setFiles }) => {
             const file = options.file;
             const file_proxy = FileProxy.fromFile(file);
 
-            // check if the file is already present in the list of files. If so, replace it or save it as new version
-            const oldCopy = files.find(f => f.name === file_proxy.name)
-            if (oldCopy) {
-              if(oldCopy.status === FileStatus.ON_CHAIN){
-                // TODO continue
-                console.log("dgs")
-                } 
-            }
-
             // check if the file is a valid file
-            if (checkFileValidity(file_proxy)) 
-                setFiles([...files, file_proxy])
+            if (checkFileValidity(file_proxy)) {
+                updateFilesList(file_proxy)
+            }
         },
         showUploadList: false
     };

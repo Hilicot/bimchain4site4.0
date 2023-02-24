@@ -30,12 +30,17 @@ export const FileTable: React.FC<FilesProps> = ({ type, data, setData, chain, se
 
   const refreshData = () => setData([...data])
 
-  const displayed_data = data.filter((item: FileProxy) => {
-    if (type === "on_chain")
-      return item.status === FileStatus.ON_CHAIN ;
-    else
-      return item.status !== FileStatus.ON_CHAIN;
-  })
+  // TODO: remove ignore option (only used to disable one single table)
+  let displayed_data: FileProxy[];
+  if(type === "ignore")
+    displayed_data = data;
+  else
+    displayed_data = data.filter((item: FileProxy) => {
+      if (type === "on_chain")
+        return item.status === FileStatus.ON_CHAIN ;
+      else if(type === "local")
+        return item.status !== FileStatus.ON_CHAIN;
+    })
 
   // to handle file uploads
   const uploadFile = async (item: FileProxy) => {
@@ -44,8 +49,7 @@ export const FileTable: React.FC<FilesProps> = ({ type, data, setData, chain, se
       return;
     }
     
-    const file = await item.getFile();
-    const transaction = new Transaction(file, item.name);
+    const transaction = new Transaction(item);
     const originalStatus = item.status;
     item.status = FileStatus.COMMITTING;
     // Refresh table
@@ -59,6 +63,8 @@ export const FileTable: React.FC<FilesProps> = ({ type, data, setData, chain, se
           item.status = originalStatus;
         }
         // Refresh table
+        // TODO #17 if there is already an old copy of the file on the blockchain, they must be put together
+        // or just refresh the whole table
         refreshData();
       }).catch((error:any) => console.log(error))
 

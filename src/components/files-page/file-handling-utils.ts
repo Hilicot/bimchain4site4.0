@@ -51,9 +51,13 @@ export class FileProxy {
         return f
     }
 
-    static fromUrl(name: string, hash: string, version: number, url: string, author: string): FileProxy {
-        // TODO implement last_modified date inside the contract (or better, upload date)
-        const f = new FileProxy(name, new Date(), version, FileStatus.ON_CHAIN);
+    /**
+     * Create a FileProxy from a file that is already on the blockchain. The file is not actually downloaded, we download only the metadata.
+     * The file is downloaded only when we call getFile().
+     */
+    static fromUrl(name: string, hash: string, version: number, url: string, author: string, timestamp:number): FileProxy {
+        const time = new Date(timestamp*1000); // timestamp is in UNIX format (in seconds, not milliseconds as assumed by Date())
+        const f = new FileProxy(name, time, version, FileStatus.ON_CHAIN);
         f.hash = hash;
         f.url = url;
         f.author = author;
@@ -68,6 +72,20 @@ export class FileProxy {
         return f;
     }
 
+    /**
+     * Get the newest version of a list of files with the same name. All other versions are added to the previous_versions array.
+     */
+    static getMostRecentVersion(files: FileProxy[]): FileProxy {
+        files.sort((a, b) => b.version - a.version);
+        const newest = files[0];
+        newest.previous_versions.push(...files.slice(1));
+        return newest;
+    }
+
+
+    /**
+     * @returns the file associated with this FileProxy. If the file is not present locally, it is downloaded from IPFS and stored locally.
+     */
     async getFile(): Promise<File> {
         if (this.file) {
             return this.file;
@@ -76,6 +94,7 @@ export class FileProxy {
             if(this.url?.split(":")[0] == "ipfs"){
                 const res = await fetch(this.getHTTPUrl());
                 const blob = await res.blob();
+                // storee file locally (for future use)
                 this.file = new File([blob], this.name);
                 return this.file;
             }

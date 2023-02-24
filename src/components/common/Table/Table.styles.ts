@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Table as AntdTable } from 'antd';
 import { FONT_SIZE } from '@app/styles/themes/constants';
+import { Card as CommonCard } from 'components/common/Card/Card';
 
 export const Table = styled(AntdTable)`
   & thead .ant-table-cell {
@@ -85,4 +86,8 @@ export const Table = styled(AntdTable)`
       color: var(--disabled-color);
     }
   }
+`;
+
+export const Card = styled(CommonCard)`
+  margin-bottom: 1rem;
 `;

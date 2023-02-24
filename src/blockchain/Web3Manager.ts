@@ -92,13 +92,15 @@ export class Web3Manager {
         for (let i = 1; i <= fileCount; i++) {
             const file = await this.CDEcontract.methods.getFile(i).call()
             files.push({
-                name: file[0],
-                hash: file[1],
-                version: file[2],
-                url: file[3],
-                author: file[4]
+                name: file[0]  as string,
+                hash: file[1] as string,
+                version: parseInt(file[2]) as number,
+                url: file[3] as string,
+                author: file[4] as string,
+                timestamp: file[5] as number
             })
         }
+        console.log(files)
         return files;
     }
 

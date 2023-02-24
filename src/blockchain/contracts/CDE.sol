@@ -13,6 +13,7 @@ contract CDE {
     int version;
     string url;
     address author;
+    uint timestamp;
   }
 
   constructor() public {
@@ -25,23 +26,24 @@ contract CDE {
     string memory _url
   ) public {
     // Make sure the file hash exists
-    require(bytes(_hash).length > 0);
+    require(bytes(_hash).length > 0, "hash not valid");
     // Make sure file name exists
-    require(bytes(_name).length > 0);
+    require(bytes(_name).length > 0, "name not valid");
     // Make sure uploader address exists
-    require(msg.sender != address(0));
+    require(msg.sender != address(0), "uploader address not valid");
 
     // Increment file id
     fileCount++;
-    // Set version number
+    // Set version number (//TODO we could remove the version to increase performance, and compute version number in the web app from the timestamps. Or track everything instead -> index dictionary by filename? (more complex)
     int version = 1;
     for (int i = 0; i < fileCount; i++) {
       if (keccak256(abi.encodePacked(files[i].name)) == keccak256(abi.encodePacked(_name))) {
-        version = files[i].version + 1;
+        version = version + 1;
       }
     }
+
     // Add file to contract
-    files[fileCount] = File(_name, _hash, version, _url, msg.sender);
+    files[fileCount] = File(_name, _hash, version, _url, msg.sender, block.timestamp);
   }
 
   function getFile(int _id)
@@ -52,12 +54,15 @@ contract CDE {
       string memory,
       int,
       string memory,
-      address 
+      address,
+      uint  
     )
   {
     File memory file = files[_id];
-    return (file.name, file.hash, file.version, file.url, file.author);
+    return (file.name, file.hash, file.version, file.url, file.author, file.timestamp);
   }
+
+  // TODO #15 create CDE function to get all files at once (might speed things up)
 
   // function to interact with OpenSea
   function tokenURI(uint256 _tokenId) public view returns (string memory) {

@@ -25,6 +25,8 @@ const Error404 = withLoading(Error404Page);
 const AuthLayoutFallback = withLoading(AuthLayout);
 const LogoutFallback = withLoading(Logout);
 
+// TODO #3 remove additional files that are not used anymore
+
 export const AppRouter: React.FC = () => {
   const protectedLayout = (
     <RequireAuth>

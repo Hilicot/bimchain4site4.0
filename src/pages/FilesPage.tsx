@@ -11,16 +11,20 @@ import BlockchainManager from '@app/blockchain/BlockchainManager';
 import NFTStorageBlockchain from '@app/blockchain/IPFS/NFTStorageBlockchain';
 import { IFCviewerModal } from '@app/components/ifc/IFCviewerModal';
 import UploadFile from '@app/components/files-page/UploadFile';
+import { Spinner } from '@app/components/common/Spinner/Spinner';
+import * as ST from '@app/components/common/Table/Table.styles';
 
 const FilesPage: React.FC = () => {
   const [files, setFiles] = useState<FileProxy[]>([]);
   const [chain, setChain] = useState<Blockchain>(new NFTStorageBlockchain);
+  const [loadingFiles, setLoadingFiles] = useState<boolean>(false);
   const [viewedIFCfile, setViewedIFCfile] = useState<FileProxy | null>(null);
   const BM = new BlockchainManager("NFT.Storage");
 
 
   useEffect(() => {
     const getData = async () => {
+      setLoadingFiles(true);
       // add blockchain object
       await BM.init()
       setChain(BM.getBlockchain());
@@ -30,24 +34,35 @@ const FilesPage: React.FC = () => {
       // const fake_data = await getFakeTreeTableData()
       // let res = fake_data;
       setFiles(await chain.fetchRemoteFiles())
+      setLoadingFiles(false);
     }
     getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  
+  // TODO #4 add reload button (Or check if user has to login in MetaMask and reload when that is done)
 
   const desktopLayout = (
     <Row>
       <SF.LeftSideCol xl={16} xxl={17} id="desktop-content">
-        <FileTable type={"on_chain"} data={files} setData={setFiles} chain={chain} setViewedIFCfile={setViewedIFCfile} />
-        <FileTable type={"local"} data={files} setData={setFiles} chain={chain} setViewedIFCfile={setViewedIFCfile} />
+        <Spinner spinning={loadingFiles} >
+          {false ? // TODO decide wheter to keep 1 or 2 tables
+            <FileTable type={"ignore"} data={files} setData={setFiles} chain={chain} setViewedIFCfile={setViewedIFCfile} />
+            :
+            <><ST.Card title="Certified files" padding="1.25rem 1.25rem 0">
+              <FileTable type={"on_chain"} data={files} setData={setFiles} chain={chain} setViewedIFCfile={setViewedIFCfile} />
+            </ST.Card>
+              <ST.Card title="Local files" padding="1.25rem 1.25rem 0">
+                <FileTable type={"local"} data={files} setData={setFiles} chain={chain} setViewedIFCfile={setViewedIFCfile} />
+              </ST.Card>
+            </>}
+        </Spinner>
         <IFCviewerModal viewedIFCfile={viewedIFCfile} setViewedIFCfile={setViewedIFCfile} />
       </SF.LeftSideCol>
 
       <SF.RightSideCol xl={8} xxl={7}>
         <S.BoundedCard title={'Upload Files'}  >
-          <UploadFile files={files} setFiles={setFiles} />
+          <UploadFile setFiles={setFiles} />
         </S.BoundedCard>
       </SF.RightSideCol>
     </Row>

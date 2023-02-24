@@ -19,11 +19,11 @@ class NFTStorageBlockchain extends Blockchain {
     uploadFile = async (transaction: Transaction) : Promise<Transaction> => {
         try {
             // Upload file to IPFS network through NFT.Storage
-            const result = await this.nftstorage.store(transaction.getMetadata());
+            const result = await this.nftstorage.store(await transaction.getMetadata());
 
             // Register the result of the transaction in the transaction object
             transaction.result.registerResult(true, result.ipnft, result.data.attributes.content.href);
-
+            console.log('NFT.Storage result: ', result)
         } catch (e) {
             console.error(e);
             transaction.result.registerResult(false, '', '');
