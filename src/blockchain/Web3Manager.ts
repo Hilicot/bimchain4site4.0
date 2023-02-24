@@ -76,7 +76,7 @@ export class Web3Manager {
             await this.init();
         }
 
-        return await this.CDEcontract.methods.registerFile(transaction.name, transaction.result.hash, transaction.result.url).send({ from: this.account })
+        return await this.CDEcontract.methods.registerFile(transaction.file.name, transaction.result.hash, transaction.result.url).send({ from: this.account })
     }
 
     /**

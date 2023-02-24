@@ -23,11 +23,11 @@ abstract class Blockchain {
     async commitTransaction(transaction: Transaction): Promise<TransactionResult> {
         // Upload file to IPFS
         transaction = await this.uploadFile(transaction);
-        /*
+        
         if (transaction.result.success)
             // Register uploaded file to the blockchain
             await this.web3Manager.registerFile(transaction);
-            */
+            
         return transaction.result;
     }
 
