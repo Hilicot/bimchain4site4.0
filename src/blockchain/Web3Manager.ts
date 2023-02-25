@@ -89,7 +89,7 @@ export class Web3Manager {
         }
         const fileCount = await this.CDEcontract.methods.fileCount().call()
         const files = []
-        for (let i = 1; i <= fileCount; i++) {
+        for (let i = 0; i < fileCount; i++) {
             const file = await this.CDEcontract.methods.getFile(i).call()
             files.push({
                 name: file[0]  as string,
