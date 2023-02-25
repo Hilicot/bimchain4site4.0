@@ -16,6 +16,7 @@ interface FilesProps {
   setData: (data: FileProxy[]) => void;
   chain: Blockchain;
   setViewedIFCfile: (viewedIFCfile: FileProxy|null) => void;
+  setReload: (reload: boolean) => void;
 }
 
 const initialPagination: Pagination = {
@@ -23,7 +24,7 @@ const initialPagination: Pagination = {
   pageSize: 20,
 };
 
-export const FileTable: React.FC<FilesProps> = ({ type, data, setData, chain, setViewedIFCfile}: any) => {
+export const FileTable: React.FC<FilesProps> = ({ type, data, setData, chain, setViewedIFCfile, setReload}: any) => {
   const { t } = useTranslation();
 
   const [pagination, setPagination] = useState<Pagination>(initialPagination);
@@ -62,10 +63,9 @@ export const FileTable: React.FC<FilesProps> = ({ type, data, setData, chain, se
           console.error("Failed to upload file to blockchain", res)
           item.status = originalStatus;
         }
-        // Refresh table
-        // TODO #17 if there is already an old copy of the file on the blockchain, they must be put together
-        // or just refresh the whole table
+        // Reload table (refetch from blockchain)
         refreshData();
+        setReload();
       }).catch((error:any) => console.log(error))
 
   };
