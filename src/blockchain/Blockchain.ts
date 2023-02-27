@@ -39,10 +39,10 @@ abstract class Blockchain {
     abstract uploadFile(transaction: Transaction): Promise<Transaction>
 
     public async fetchRemoteFiles(): Promise<FileProxy[]> {
-        const files = await this.web3Manager.getFiles();
+        const files = await this.web3Manager.getAllFilesRecent();
 
         // transform the files objects in FileProxy
-        const file_proxies = files.map(f => FileProxy.fromUrl(f.name, f.hash, f.version, f.url, f.author, f.timestamp));
+        const file_proxies = files.map((f:any) => FileProxy.fromUrl(f.name, f.hash, f.version, f.url, f.author, f.timestamp));
         // group files with the same name
         const files_grouped_by_name = groupBy(file_proxies, "name");
 

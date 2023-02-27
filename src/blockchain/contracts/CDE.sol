@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.8.20;
+pragma experimental ABIEncoderV2;
 
 contract CDE {
   /** files = list Files. Each file is the head of a linked list of all its previous versions.
@@ -13,8 +14,8 @@ contract CDE {
     e.g.    001 -> 5689
             002 -> 3674
       */
-  mapping(uint => bytes32) public heads;
-  uint public fileCount = 0; // number of heads
+  mapping(uint16 => bytes32) public heads;
+  uint16 public fileCount = 0; // number of heads
 
   /** allFileVersions = mapping of all versions of all files. Indexed by id
     e.g.    25    -> file1_v1
@@ -26,12 +27,13 @@ contract CDE {
   File f;
 
   struct File {
-    bytes32 name; // name is hashed to save gas 
-    int version;
+    bytes32 name; // name is hashed to save gas (it can immediately be used as index)
+    uint version;
     string url;
     address author;
     uint timestamp;
     bytes32 next;
+    uint16 index;
   }
 
   constructor() public {
@@ -40,7 +42,7 @@ contract CDE {
   function registerFile(
     bytes32 _name,
     string memory _url
-  ) public {
+  ) public{
     // Make sure file name exists
     require(_name > 0, "name not valid");
     // Make sure uploader address exists
@@ -48,12 +50,14 @@ contract CDE {
 
     // check if there is a previous version
     bytes32 oldAlias = file_by_name[_name];
-    int version = 1;
+    uint version = 1;
+    uint16 index = 0;
     if (oldAlias != 0x0) { // there is already a file with the same name
       version = all_files[oldAlias].version + 1;
+      index = all_files[oldAlias].index;
     }
 
-    File memory file = File(_name, version, _url, msg.sender, block.timestamp, oldAlias);
+    File memory file = File(_name, version, _url, msg.sender, block.timestamp, oldAlias, index);
 
     // Add file to general list
     bytes32 id = keccak256(abi.encodePacked(file.name, file.version));
@@ -61,15 +65,16 @@ contract CDE {
 
     // Add file to linked list and head list
     file_by_name[_name] = id;
-    heads[fileCount] = id;
-    fileCount++;
+    heads[index] = id;
+    if (oldAlias == 0x0) 
+      fileCount++; // increase counter only if it is a new head
   }
 
   function getFileByName(bytes32 name)
     public
     view
     returns (
-      int,
+      uint,
       string memory,
       address,
       uint  
@@ -79,10 +84,9 @@ contract CDE {
     return (file.version, file.url, file.author, file.timestamp);
   }
 
-  // TODO #15 create CDE function to get all files at once (might speed things up)
   function getAllFilesRecent() public view returns(File[] memory){
     File[] memory rv = new File[](fileCount);
-    for (uint i=0; i < fileCount; i++){
+    for (uint16 i=0; i < fileCount; i++){
       rv[i] = all_files[heads[i]];
     }
     return rv;

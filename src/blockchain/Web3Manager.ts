@@ -2,7 +2,7 @@ import Web3 from 'web3';
 import CDE from './built_contracts/CDE.json';
 import { Transaction } from './Transaction';
 
-const win:any = <any>window; 
+const win: any = <any>window;
 
 export class Web3Manager {
     private static instance: Web3Manager;
@@ -22,7 +22,7 @@ export class Web3Manager {
     }
 
     init = async () => {
-        if(this.initialized) return;
+        if (this.initialized) return;
         await this.loadWeb3()
         await this.loadBlockchainData()
         this.initialized = true;
@@ -48,16 +48,16 @@ export class Web3Manager {
         const web3 = win.web3
         // Load account
         let accounts;
-        try{
+        try {
             accounts = await web3.eth.getAccounts()
-        }catch(e){
+        } catch (e) {
             console.error(e)
             return
         }
         this.account = accounts[0]
         const networkId = await web3.eth.net.getId()
         // @ts-ignore
-        const networkData = CDE.networks[networkId] 
+        const networkData = CDE.networks[networkId]
         if (networkData) {
             this.CDEcontract = new web3.eth.Contract(CDE.abi, networkData.address)
         } else {
@@ -70,36 +70,38 @@ export class Web3Manager {
      * @param transaction : Transaction
      * @returns void
      */
-    async registerFile(transaction:Transaction) {
-        if(!transaction || !transaction.result) throw new Error("Invalid transaction. Transaction or transaction result is null");
+    async registerFile(transaction: Transaction) {
+        if (!transaction || !transaction.result) throw new Error("Invalid transaction. Transaction or transaction result is null");
         if (!this.initialized) {
             await this.init();
         }
 
-        return await this.CDEcontract.methods.registerFile(transaction.file.name, transaction.result.hash, transaction.result.url).send({ from: this.account })
+        return await this.CDEcontract.methods.registerFile(
+            win.web3.utils.fromAscii(transaction.file.name),
+            transaction.result.url
+        ).send({ from: this.account })
     }
 
     /**
-     * Proxy functions that interacts with the blockchain. It returns the list of files registered in the blockchain
+     * Proxy functions that interacts with the blockchain. It returns the list of files registered in the blockchain. If multiple versions are registered, it returns the latest version
      * @returns list of files
      */
-    async getFiles() {
+    async getAllFilesRecent() {
         if (!this.initialized) {
             await this.init();
         }
-        const fileCount = await this.CDEcontract.methods.fileCount().call()
-        const files = []
-        for (let i = 0; i < fileCount; i++) {
-            const file = await this.CDEcontract.methods.getFile(i).call()
-            files.push({
-                name: file[0]  as string,
-                hash: file[1] as string,
-                version: parseInt(file[2]) as number,
-                url: file[3] as string,
-                author: file[4] as string,
-                timestamp: file[5] as number
-            })
-        }
+        const files_raw = await this.CDEcontract.methods.getAllFilesRecent().call()
+        console.log(this.CDEcontract, files_raw)
+        const files = files_raw.map((file: any) => {
+            const name = (win.web3.utils.toAscii(file[0]) as string).split("\u0000")[0] // convert the name from bytes32 to string
+            return {
+                name: name, 
+                version: parseInt(file[1]) as number,
+                url: file[2] as string,
+                author: file[3] as string,
+                timestamp: file[4] as number
+            }
+        })
         console.log(files)
         return files;
     }
