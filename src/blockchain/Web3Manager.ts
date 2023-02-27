@@ -91,7 +91,6 @@ export class Web3Manager {
             await this.init();
         }
         const files_raw = await this.CDEcontract.methods.getAllFilesRecent().call()
-        console.log(this.CDEcontract, files_raw)
         const files = files_raw.map((file: any) => {
             const name = (win.web3.utils.toAscii(file[0]) as string).split("\u0000")[0] // convert the name from bytes32 to string
             return {
@@ -102,7 +101,6 @@ export class Web3Manager {
                 timestamp: file[4] as number
             }
         })
-        console.log(files)
         return files;
     }
 
