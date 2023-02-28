@@ -6,20 +6,24 @@ import { IFCSPACE, IFCOPENINGELEMENT } from 'web-ifc';
 import { FileProxy } from '../files-page/file-handling-utils';
 import React from 'react';
 import { Spinner } from '../common/Spinner/Spinner';
-import { Tooltip } from 'antd';
+import { Col, Row, Tooltip } from 'antd';
 import { Button } from '@app/components/common/buttons/Button/Button';
 import { BorderLeftOutlined } from '@ant-design/icons';
+import { Modal } from '../common/Modal/Modal';
+import { highlight_addition } from './diff_viewer';
 
 let viewer: IfcViewerAPI;
 
 interface IFCviewerProps {
-  file: FileProxy|null
+  file: FileProxy | null
 }
 
 export const IFCviewer: React.FC<IFCviewerProps> = ({ file }) => {
   const { isMounted } = useMounted();
   const [loading, setLoading] = React.useState(false);
   const [isClipperActive, setIsClipperActive] = React.useState(false);
+  const [properties, setProperties] = React.useState<any>(null);
+  const [showProperties, setShowProperties] = React.useState(false);
 
   const loadIFCViewer = useCallback(async () => {
     if (!file)
@@ -47,6 +51,7 @@ export const IFCviewer: React.FC<IFCviewerProps> = ({ file }) => {
     viewer.IFC.loader.ifcManager.useWebWorkers(true, '../../../wasm/IFCWorker.js');
     viewer.IFC.setWasmPath('../../../wasm/');
     const model = await viewer.IFC.loadIfc(f, true);
+    console.log(model)
 
     viewer.context.ifcCamera.cameraControls
     viewer.context.renderer.usePostproduction = true;
@@ -85,41 +90,70 @@ export const IFCviewer: React.FC<IFCviewerProps> = ({ file }) => {
       if (viewer.clipper.active) {
         viewer.clipper.createPlane();
       } else {
-        const result = await viewer.IFC.selector.highlightIfcItem(true);
+        //const result = await viewer.IFC.selector.highlightIfcItem(true);
+        const result = await highlight_addition(viewer.IFC)
         if (!result) return;
         const { modelID, id } = result;
         const props = await viewer.IFC.getProperties(modelID, id, true, false);
+        setProperties(JSON.stringify(props, null, 3));
         console.log(props);
       }
     }
     console.log()
     setLoading(false);
-  },[file])
+  }, [file])
 
-    // load file
-    useEffect(
-      () => {
-        loadIFCViewer();
-      },
-      [isMounted, loadIFCViewer],
-    );
+  // load file
+  useEffect(
+    () => {
+      loadIFCViewer();
+    },
+    [isMounted, loadIFCViewer],
+  );
 
   const toggleClippingPlanes = () => {
-    if(viewer)
-      viewer.clipper.active  = !viewer.clipper.active 
+    if (viewer)
+      viewer.clipper.active = !viewer.clipper.active
     setIsClipperActive(viewer.clipper.active)
   }
 
   return (
+    <>
     <Spinner spinning={loading}>
-      <Tooltip title="Clipping planes">
-        <Button type={isClipperActive ? "primary" : "ghost"} icon={<BorderLeftOutlined />} size="small" onClick={() => { toggleClippingPlanes() }} />
-      </Tooltip>
-      <div id="IFCviewer_canvas" style={{
-        position: "relative",
-        height: "80vh",
-        width: "90vw",
-      }}></div>
-    </Spinner>
+      <Row>
+        <Col span={22}>
+          <div id="IFCviewer_canvas" style={{
+            position: "relative",
+            height: "80vh",
+            width: "80vw",
+          }}></div>
+        </Col>
+        <Col span={2}>
+          <Tooltip title="Clipping planes">
+            <Button type={isClipperActive ? "primary" : "default"} icon={<BorderLeftOutlined />} size="small" onClick={() => { toggleClippingPlanes() }} >Clipping planes</Button>
+          </Tooltip>
+          <Tooltip title="Clipping planes">
+            <Button disabled={!properties} icon={<BorderLeftOutlined />} size="small" onClick={() => { setShowProperties(true) }} >Properties</Button>
+          </Tooltip>
+        </Col>
+      </Row>
+    </Spinner >
+    <Modal 
+        title="Properties"
+        centered={true}
+        open={showProperties}
+        onOk={() => setShowProperties(false)}
+        onCancel={() => setShowProperties(false)}
+        //width={'100%'}
+        size="medium"
+        destroyOnClose={true}
+        bodyStyle={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+      }}>
+      <pre>{properties}</pre>
+    </Modal>
+    </>
   );
 }
