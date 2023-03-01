@@ -51,7 +51,7 @@ contract CDE {
     // check if there is a previous version
     bytes32 oldAlias = file_by_name[_name];
     uint version = 1;
-    uint16 index = 0;
+    uint16 index = fileCount;
     if (oldAlias != 0x0) { // there is already a file with the same name
       version = all_files[oldAlias].version + 1;
       index = all_files[oldAlias].index;

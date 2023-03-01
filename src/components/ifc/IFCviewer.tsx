@@ -90,8 +90,8 @@ export const IFCviewer: React.FC<IFCviewerProps> = ({ file }) => {
       if (viewer.clipper.active) {
         viewer.clipper.createPlane();
       } else {
-        //const result = await viewer.IFC.selector.highlightIfcItem(true);
-        const result = await highlight_addition(viewer.IFC)
+        const result = await viewer.IFC.selector.highlightIfcItem(true);
+        //const result = await highlight_addition(viewer.IFC)
         if (!result) return;
         const { modelID, id } = result;
         const props = await viewer.IFC.getProperties(modelID, id, true, false);

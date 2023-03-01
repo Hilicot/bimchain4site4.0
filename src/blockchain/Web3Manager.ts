@@ -101,6 +101,7 @@ export class Web3Manager {
                 timestamp: file[4] as number
             }
         })
+        console.log(files_raw)
         return files;
     }
 

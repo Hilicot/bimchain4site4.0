@@ -72,7 +72,8 @@ export async function highlight_addition(ifc: IfcManager): Promise<any> {
     const {modelID, id} = result
     console.log(result)
 
-    await ifc.selector.prepickIfcItemsByID(modelID,[id],false)
+    const materials = await ifc.loader.ifcManager.getMaterialsProperties(modelID, id)
+    console.log(materials)
 
     ifc.loader.ifcManager.createSubset({
         modelID: modelID,
