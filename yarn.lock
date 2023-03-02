@@ -6137,6 +6137,7 @@ __metadata:
     patch-package: ^6.4.7
     pigeon-maps: ^0.19.7
     postinstall-postinstall: ^2.1.0
+    postprocessing: ^6.30.1
     prettier: ^2.3.1
     react: ^17.0.2
     react-country-flag: ^3.0.2
@@ -6166,7 +6167,7 @@ __metadata:
     stylelint-config-recommended: ^5.0.0
     stylelint-config-styled-components: ^0.1.1
     stylelint-processor-styled-components: ^1.10.0
-    three: 0.135.0
+    three: ^0.150.1
     three-mesh-bvh: 0.5.5
     ts-loader: ^9.4.2
     tsconfig-paths-webpack-plugin: ^4.0.0
@@ -6175,8 +6176,7 @@ __metadata:
     typescript: ^4.1.2
     uuid: ^8.3.2
     web-ifc: 0.0.35
-    web-ifc-three: 0.0.117
-    web-ifc-viewer: 1.0.134
+    web-ifc-viewer-bimchain: "https://github.com/Hilicot/web-ifc-viewer-bimchain"
     web-vitals: ^1.0.1
     web3: ^1.8.2
     web3.storage: ^4.4.0
@@ -18073,12 +18073,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postprocessing@npm:^6.23.1":
-  version: 6.29.3
-  resolution: "postprocessing@npm:6.29.3"
+"postprocessing@npm:^6.23.1, postprocessing@npm:^6.30.1":
+  version: 6.30.1
+  resolution: "postprocessing@npm:6.30.1"
   peerDependencies:
-    three: ">= 0.125.0 < 0.149.0"
-  checksum: f999f813736428169e25ba7fb7e9c2bc3365c35f9fb2f1895f594f7d187a0cb6f3741b840fea6dabc0097aca3c88eb47f78e01c20c94861d7b242cda8c104044
+    three: ">= 0.138.0 < 0.151.0"
+  checksum: 050afe302123f670a9be0d952387aef9f1e1b42e64d5959f1ae5da26cc819bcbae126bce19612634fc2042c64b5efa814e666bed032de767acfeb579ad9610ce
   languageName: node
   linkType: hard
 
@@ -22267,7 +22267,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"three-mesh-bvh@npm:^0.5.11, three-mesh-bvh@npm:^0.5.2":
+"three-mesh-bvh@npm:^0.5.2":
   version: 0.5.23
   resolution: "three-mesh-bvh@npm:0.5.23"
   peerDependencies:
@@ -22276,10 +22276,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"three@npm:0.135.0, three@npm:^0.135.0":
-  version: 0.135.0
-  resolution: "three@npm:0.135.0"
-  checksum: bd7e195932587a5be0c887947adf2b3898c6fa71722800432562aed10beddb2f448d0f237d937824805eebf90e625fc22ed57054618121f47811a8e82b528507
+"three@npm:^0.150.1":
+  version: 0.150.1
+  resolution: "three@npm:0.150.1"
+  checksum: b12a92a681a30e62640d90bdf074d039c05d8294ad40f437e7e1807ce0e698ad6728878a1e72dad22bf05d7a359843ecea8739d05f2f13143bc3a4ecdfdbdd7b
   languageName: node
   linkType: hard
 
@@ -23514,19 +23514,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web-ifc-three@npm:0.0.117":
-  version: 0.0.117
-  resolution: "web-ifc-three@npm:0.0.117"
-  dependencies:
-    three: ^0.135.0
-    three-mesh-bvh: ^0.5.11
-    web-ifc: ^0.0.35
-  peerDependencies:
-    three: ^0.135.0
-  checksum: bedfb73d9f3190b4d181cab5a93a2867b42c96a778545038d72501c848a06494f3feb45de1e9ac94c93cfe126a32fe5ac59a0c8177f97571c02a6ce38c77dce7
-  languageName: node
-  linkType: hard
-
 "web-ifc-three@npm:^0.0.102":
   version: 0.0.102
   resolution: "web-ifc-three@npm:0.0.102"
@@ -23539,9 +23526,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web-ifc-viewer@npm:1.0.134":
+"web-ifc-viewer-bimchain@https://github.com/Hilicot/web-ifc-viewer-bimchain":
   version: 1.0.134
-  resolution: "web-ifc-viewer@npm:1.0.134"
+  resolution: "web-ifc-viewer-bimchain@https://github.com/Hilicot/web-ifc-viewer-bimchain.git#commit=f8e7fa3288d6fe74eef9de3ff195ad0a04c98b26"
   dependencies:
     camera-controls: ^1.33.1
     dat.gui: ^0.7.7
@@ -23552,11 +23539,11 @@ __metadata:
     web-ifc-three: ^0.0.102
   peerDependencies:
     three: ^0.135.0
-  checksum: 52046afdeb889c463c788a2888c042d44f41d070886899dbb8737d38709636e0b34eb20085f56f216bf4be2aae3d246b8daef6d9ebedc1a0815b15cb07840500
+  checksum: 7258abf113503a68be089017d66f562ceb02211c9116536f259589219d68953cbe76e29f9075926d795456c1a3dae3a9ef5e8d70e1ed1419643ccdd09fe47526
   languageName: node
   linkType: hard
 
-"web-ifc@npm:0.0.35, web-ifc@npm:^0.0.35":
+"web-ifc@npm:0.0.35":
   version: 0.0.35
   resolution: "web-ifc@npm:0.0.35"
   checksum: 5ad1f61a7ad043d4484444e899f34a0e0397b02e1181cd40642a16ab4fa484dc2a5489307bfd202450ef9d5cbb1293dd7cf927089dac344823ad57f993ada06f

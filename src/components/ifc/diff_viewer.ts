@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { Raycaster, Scene, Vector2 } from 'three';
-import { IfcManager } from 'web-ifc-viewer/dist/components';
+import { IfcContext, IfcManager, ViewerOptions } from 'web-ifc-viewer-bimchain/dist/components';
 /*
 const addition_material = new THREE.MeshBasicMaterial({
     color: 0xff0000,
@@ -55,10 +55,12 @@ function cast(event:any, container:any) {
     return raycaster.intersectObjects(ifcModels);
 }*/
 
+
+
 const addition_material = new THREE.MeshBasicMaterial({
     transparent: true,
     opacity: 0.6,
-    color: 0xff88ff,
+    color: 0x11aa11,
     depthTest: false
 });
 
@@ -66,7 +68,12 @@ const scene = new Scene();
 
 export async function highlight_addition(ifc: IfcManager): Promise<any> {
 
-    const result = await ifc.selector.pickIfcItem(false)
+    
+    const result = await ifc.selector.colorIfcItem(0x11ff11)
+    //const group = await ifc.selector.createGroupHighlight("test", 0x0088ff )
+    //const result = await ifc.selector.addToHighlightGroup(group)
+
+    //await ifc.selector.unpickIfcItems()
     if(!result) 
         return null
     const {modelID, id} = result
@@ -75,12 +82,13 @@ export async function highlight_addition(ifc: IfcManager): Promise<any> {
     const materials = await ifc.loader.ifcManager.getMaterialsProperties(modelID, id)
     console.log(materials)
 
-    ifc.loader.ifcManager.createSubset({
+    /*const mesh = ifc.loader.ifcManager.createSubset({
         modelID: modelID,
         ids: [id],
         material: addition_material,
         scene: scene,
         removePrevious: true
     })
-    return result
+    mesh.visible = true*/
+    return {modelID:0,id:22626}
 }

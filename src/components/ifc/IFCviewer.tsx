@@ -1,6 +1,5 @@
 import { useMounted } from '@app/hooks/useMounted';
 import { useCallback, useEffect } from 'react';
-import { IfcViewerAPI } from 'web-ifc-viewer';
 import { Color } from "three";
 import { IFCSPACE, IFCOPENINGELEMENT } from 'web-ifc';
 import { FileProxy } from '../files-page/file-handling-utils';
@@ -12,7 +11,21 @@ import { BorderLeftOutlined } from '@ant-design/icons';
 import { Modal } from '../common/Modal/Modal';
 import { highlight_addition } from './diff_viewer';
 
-let viewer: IfcViewerAPI;
+//TODO Conditional import for development, remove it on production 
+//import {IfcViewerAPI} from 'web-ifc-viewer-bimchain';
+//let viewer: IfcViewerAPI;
+let viewer_module: any;
+try { 
+  viewer_module = require('./web-ifc-viewer-bimchain');
+} catch (err) {
+  if (err instanceof Error) {
+    viewer_module = require('web-ifc-viewer-bimchain');
+  } else {
+    throw err;
+  }
+}
+const { IfcViewerAPI } = viewer_module;
+let viewer: typeof IfcViewerAPI;
 
 interface IFCviewerProps {
   file: FileProxy | null
@@ -90,8 +103,8 @@ export const IFCviewer: React.FC<IFCviewerProps> = ({ file }) => {
       if (viewer.clipper.active) {
         viewer.clipper.createPlane();
       } else {
-        const result = await viewer.IFC.selector.highlightIfcItem(true);
-        //const result = await highlight_addition(viewer.IFC)
+        //const result = await viewer.IFC.selector.highlightIfcItem(true);
+        const result = await highlight_addition(viewer.IFC)
         if (!result) return;
         const { modelID, id } = result;
         const props = await viewer.IFC.getProperties(modelID, id, true, false);
@@ -119,26 +132,26 @@ export const IFCviewer: React.FC<IFCviewerProps> = ({ file }) => {
 
   return (
     <>
-    <Spinner spinning={loading}>
-      <Row>
-        <Col span={22}>
-          <div id="IFCviewer_canvas" style={{
-            position: "relative",
-            height: "80vh",
-            width: "80vw",
-          }}></div>
-        </Col>
-        <Col span={2}>
-          <Tooltip title="Clipping planes">
-            <Button type={isClipperActive ? "primary" : "default"} icon={<BorderLeftOutlined />} size="small" onClick={() => { toggleClippingPlanes() }} >Clipping planes</Button>
-          </Tooltip>
-          <Tooltip title="Clipping planes">
-            <Button disabled={!properties} icon={<BorderLeftOutlined />} size="small" onClick={() => { setShowProperties(true) }} >Properties</Button>
-          </Tooltip>
-        </Col>
-      </Row>
-    </Spinner >
-    <Modal 
+      <Spinner spinning={loading}>
+        <Row>
+          <Col span={22}>
+            <div id="IFCviewer_canvas" style={{
+              position: "relative",
+              height: "80vh",
+              width: "80vw",
+            }}></div>
+          </Col>
+          <Col span={2}>
+            <Tooltip title="Clipping planes">
+              <Button type={isClipperActive ? "primary" : "default"} icon={<BorderLeftOutlined />} size="small" onClick={() => { toggleClippingPlanes() }} >Clipping planes</Button>
+            </Tooltip>
+            <Tooltip title="Clipping planes">
+              <Button disabled={!properties} icon={<BorderLeftOutlined />} size="small" onClick={() => { setShowProperties(true) }} >Properties</Button>
+            </Tooltip>
+          </Col>
+        </Row>
+      </Spinner >
+      <Modal
         title="Properties"
         centered={true}
         open={showProperties}
@@ -151,9 +164,9 @@ export const IFCviewer: React.FC<IFCviewerProps> = ({ file }) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center'
-      }}>
-      <pre>{properties}</pre>
-    </Modal>
+        }}>
+        <pre>{properties}</pre>
+      </Modal>
     </>
   );
 }
