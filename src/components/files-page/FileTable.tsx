@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
-import { Table } from 'components/common/Table/Table';
-import { Tooltip, Row } from 'antd';
+//import { Table } from 'components/common/Table/Table';
+import { Table, Tooltip, Row } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { Status } from '@app/components/profile/profileCard/profileFormNav/nav/payments/paymentHistory/Status/Status';
 import { Button } from '@app/components/common/buttons/Button/Button';
@@ -80,13 +80,17 @@ export const FileTable: React.FC<FilesProps> = ({ type, data, setData, chain, se
       title: t('common.name'),
       dataIndex: 'name',
       key: 'name',
+      sorter: (a: FileProxy, b: FileProxy) => a.name.localeCompare(b.name),
+      showSorterTooltip: false,
     },
     {
       title: "Last Modified",
       dataIndex: 'last_modified',
       key: 'last_modified',
       width: '20%',
-      render: (last_modified: Date) => last_modified.toLocaleDateString()
+      render: (last_modified: Date) => last_modified.toLocaleDateString(),
+      sorter: (a: FileProxy, b: FileProxy) => a.last_modified.getTime() - b.last_modified.getTime(),
+      showSorterTooltip: false,
     },
     {
       title: "Version",
