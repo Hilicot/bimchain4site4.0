@@ -23528,7 +23528,7 @@ __metadata:
 
 "web-ifc-viewer-bimchain@https://github.com/Hilicot/web-ifc-viewer-bimchain":
   version: 1.0.134
-  resolution: "web-ifc-viewer-bimchain@https://github.com/Hilicot/web-ifc-viewer-bimchain.git#commit=f8e7fa3288d6fe74eef9de3ff195ad0a04c98b26"
+  resolution: "web-ifc-viewer-bimchain@https://github.com/Hilicot/web-ifc-viewer-bimchain.git#commit=06285b47e60f230f355c0763e1b22e84369d5696"
   dependencies:
     camera-controls: ^1.33.1
     dat.gui: ^0.7.7
@@ -23539,7 +23539,7 @@ __metadata:
     web-ifc-three: ^0.0.102
   peerDependencies:
     three: ^0.135.0
-  checksum: 7258abf113503a68be089017d66f562ceb02211c9116536f259589219d68953cbe76e29f9075926d795456c1a3dae3a9ef5e8d70e1ed1419643ccdd09fe47526
+  checksum: 3eb6ec60ecb818dcff250764e6b12de0dcaab5db89692353eeabd206e1b344aff5f3b3ab6f30cab3a8a0917d4cceca991422765780eec5f9f9e8d5d7ea612672
   languageName: node
   linkType: hard
 
