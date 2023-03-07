@@ -213,7 +213,7 @@
     "securityCode": "Security Code",
     "select": "Select",
     "serverError": "Server Error",
-    "signUp": "Sign Up",
+    "signUp": "Register",
     "skeleton": "Skeleton",
     "specifity": "Specifity",
     "spinner": "Spinner",
@@ -765,7 +765,7 @@
   },
   "signup": {
     "agree": "I agree to the",
-    "alreadyHaveAccount": "Already have an account? Log in",
+    "alreadyHaveAccount": "Already have an account? Return to the",
     "and": "and",
     "facebookLink": "Sign up with Facebook",
     "googleLink": "Sign up with Google",
