@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -8,7 +8,9 @@ import { doSignUp } from '@app/store/slices/authSlice';
 import { notificationController } from '@app/controllers/notificationController';
 import * as Auth from '@app/components/layouts/AuthLayout/AuthLayout.styles';
 import * as S from './SignUpForm.styles';
-import { MetamaskWallet } from '@app/blockchain/Wallet';
+import { Steps } from '@app/components/common/Steps/Steps';
+import { SignUpUserData } from './SignUpUserData';
+import { SignUpWalletLogin } from './SignUpWalletLogin';
 
 interface SignUpFormData {
   firstName: string;
@@ -26,18 +28,14 @@ const initValues = {
   address: '',
 };
 
-let address = '';
-
 export const SignUpForm: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [isLoading, setLoading] = useState(false);
+  const [step, setStep] = useState<number>(1);
+  const [address, setAddress] = useState<string>('');
   const { t } = useTranslation();
 
-  useEffect(() => {
-    MetamaskWallet.getInstance()
-      .then(wallet => {address = wallet.account; return null})
-  }, []);
 
   const handleSubmit = (values: SignUpFormData) => {
     setLoading(true);
@@ -49,60 +47,39 @@ export const SignUpForm: React.FC = () => {
           message: t('auth.signUpSuccessMessage'),
           description: t('auth.signUpSuccessDescription'),
         });
-        navigate('/auth/login');
+        navigate('/');
       })
       .catch((err) => {
         notificationController.error({ message: err.message });
-        setLoading(false);
       });
+    setLoading(false);
   };
 
   return (
     <Auth.FormWrapper>
       <BaseForm layout="vertical" onFinish={handleSubmit} requiredMark="optional" initialValues={initValues}>
         <S.Title>{t('common.signUp')}</S.Title>
-        <Auth.FormItem
-          name="firstName"
-          label={t('common.firstName')}
-          rules={[{ required: true, message: t('common.requiredField') }]}
-        >
-          <Auth.FormInput placeholder={t('common.firstName')} />
-        </Auth.FormItem>
-        <Auth.FormItem
-          name="lastName"
-          label={t('common.lastName')}
-          rules={[{ required: true, message: t('common.requiredField') }]}
-        >
-          <Auth.FormInput placeholder={t('common.lastName')} />
-        </Auth.FormItem>
-        <Auth.FormItem
-          name="email"
-          label={t('common.email')}
-          rules={[
+        <Steps
+          size="small"
+          current={step - 1}
+          items={[
             {
-              type: 'email',
-              message: t('common.notValidEmail'),
+              title: t('signup.step1'),
+            },
+            {
+              title: t('signup.step2'),
             },
           ]}
-        >
-          <Auth.FormInput placeholder={t('common.email')} />
-        </Auth.FormItem>
-        <Auth.FormItem
-          label={'Code'}
-          name="code"
-          rules={[{ required: true, message: t('common.requiredField') }]}
-        >
-          <Auth.FormInputPassword placeholder={'******'} />
-        </Auth.FormItem>
-        <BaseForm.Item noStyle>
-          <Auth.SubmitButton type="primary" htmlType="submit" loading={isLoading}>
-            {t('common.signUp')}
-          </Auth.SubmitButton>
-        </BaseForm.Item>
+        />
+        <br />
+
+        {step === 1 && (<SignUpWalletLogin address={address} setAddress={setAddress} next={() => setStep(2)} />)}
+        {step === 2 && (<SignUpUserData back={() => setStep(1)} isLoading={isLoading} />)}
+
         <Auth.FooterWrapper>
           <Auth.Text>
             {t('signup.alreadyHaveAccount')}{' '}
-            <Link to="/auth/login">
+            <Link to="/">
               <Auth.LinkText>{'home page'}</Auth.LinkText>
             </Link>
           </Auth.Text>

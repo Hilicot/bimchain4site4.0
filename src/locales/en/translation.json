@@ -771,7 +771,9 @@
     "googleLink": "Sign up with Google",
     "loginLink": "here",
     "privacyOPolicy": "Privacy Policy",
-    "termOfUse": "Terms of Use"
+    "termOfUse": "Terms of Use",
+    "step1": "Wallet",
+    "step2": "Info"
   },
   "skeletons": {
     "active": "Active skeleton",

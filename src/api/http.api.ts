@@ -3,7 +3,8 @@ import { AxiosError } from 'axios';
 import { ApiError } from '@app/api/ApiError';
 
 export const httpApi = axios.create({
-  baseURL: process.env.REACT_APP_SERVER_URL,
+  //baseURL: process.env.REACT_APP_SERVER_URL,
+  baseURL: 'http://localhost:3001',
 });
 
 /* TODO possibly, embed our address in all api calls? or none if user is not signed up (viewer)

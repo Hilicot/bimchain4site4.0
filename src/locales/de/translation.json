@@ -770,7 +770,9 @@
     "facebookLink": "Mit Facebook anmelden",
     "googleLink": "Mit Google anmelden",
     "privacyOPolicy": "Datenschutz-Bestimmungen",
-    "termOfUse": "Nutzungsbedingungen"
+    "termOfUse": "Nutzungsbedingungen",
+    "step1": "User info",
+    "step2": "Wallet login"
   },
   "skeletons": {
     "active": "Aktives Skelett",
