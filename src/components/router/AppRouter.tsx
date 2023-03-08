@@ -11,6 +11,7 @@ import RequireAuth from '@app/components/router/RequireAuth';
 import { withLoading } from '@app/hocs/withLoading.hoc';
 import FilesPage from '@app/pages/FilesPage';
 
+const UserManagementPage = React.lazy(() => import('@app/pages/UserManagementPage'));
 const ServerErrorPage = React.lazy(() => import('@app/pages/ServerErrorPage'));
 const Error404Page = React.lazy(() => import('@app/pages/Error404Page'));
 
@@ -19,6 +20,7 @@ const Logout = React.lazy(() => import('./Logout'));
 export const DASHBOARD_PATH = '/';
 
 const Files = withLoading(FilesPage);
+const UserManagement = withLoading(UserManagementPage);
 
 const ServerError = withLoading(ServerErrorPage);
 const Error404 = withLoading(Error404Page);
@@ -40,6 +42,7 @@ export const AppRouter: React.FC = () => {
       <Routes>
         <Route path={DASHBOARD_PATH} element={protectedLayout}>
           <Route index element={<Files />} />
+          <Route path="users" element={<UserManagement />} />
           <Route path="server-error" element={<ServerError />} />
           <Route path="404" element={<Error404 />} />
         </Route>

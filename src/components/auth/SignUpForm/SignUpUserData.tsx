@@ -3,7 +3,6 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { BaseForm } from '@app/components/common/forms/BaseForm/BaseForm';
 import * as Auth from '@app/components/layouts/AuthLayout/AuthLayout.styles';
-import { Button } from '@app/components/common/buttons/Button/Button';
 
 interface SignUpUserDataProps {
     back: () => void;
@@ -40,7 +39,7 @@ export const SignUpUserData: React.FC<SignUpUserDataProps> = ({back, isLoading})
           <Auth.FormInput placeholder={t('common.email')} />
         </Auth.FormItem>
         <Auth.FormItem
-          label={'Code'}
+          label={t('auth.registrationCode')}
           name="code"
           rules={[{ required: true, message: t('common.requiredField') }]}
         >
@@ -55,7 +54,7 @@ export const SignUpUserData: React.FC<SignUpUserDataProps> = ({back, isLoading})
       <div style={{height:"0.5rem"}}></div>
       <BaseForm.Item noStyle>
         <Auth.SubmitButton type="primary" htmlType="submit" loading={isLoading}>
-          {t('common.signUp')}
+          {t('auth.signup')}
         </Auth.SubmitButton>
       </BaseForm.Item>
         </>

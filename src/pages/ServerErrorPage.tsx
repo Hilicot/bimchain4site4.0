@@ -9,7 +9,7 @@ const ServerErrorPage: React.FC = () => {
 
   return (
     <>
-      <PageTitle>{t('common.serverError')}</PageTitle>
+      <PageTitle>{t('fileTitle.serverError')}</PageTitle>
       <Error img={serverError} msg={t('serverError.main')} />
     </>
   );

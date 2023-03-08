@@ -45,7 +45,6 @@ export const SignUpForm: React.FC = () => {
       .then(() => {
         notificationController.success({
           message: t('auth.signUpSuccessMessage'),
-          description: t('auth.signUpSuccessDescription'),
         });
         navigate('/');
       })
@@ -58,7 +57,7 @@ export const SignUpForm: React.FC = () => {
   return (
     <Auth.FormWrapper>
       <BaseForm layout="vertical" onFinish={handleSubmit} requiredMark="optional" initialValues={initValues}>
-        <S.Title>{t('common.signUp')}</S.Title>
+        <S.Title>{t('auth.signup')}</S.Title>
         <Steps
           size="small"
           current={step - 1}
@@ -80,7 +79,7 @@ export const SignUpForm: React.FC = () => {
           <Auth.Text>
             {t('signup.alreadyHaveAccount')}{' '}
             <Link to="/">
-              <Auth.LinkText>{'home page'}</Auth.LinkText>
+              <Auth.LinkText>{t('pageTitle.homePage')}</Auth.LinkText>
             </Link>
           </Auth.Text>
         </Auth.FooterWrapper>

@@ -8,7 +8,7 @@ const SignUpPage: React.FC = () => {
 
   return (
     <>
-      <PageTitle>{t('common.signUp')}</PageTitle>
+      <PageTitle>{t('auth.signup')}</PageTitle>
       <SignUpForm />
     </>
   );
