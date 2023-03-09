@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 //import { Table } from 'components/common/Table/Table';
-import { Table, Tooltip, Row } from 'antd';
+import { Table, Tooltip, Row, Tag } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { Status } from '@app/components/profile/profileCard/profileFormNav/nav/payments/paymentHistory/Status/Status';
 import { Button } from '@app/components/common/buttons/Button/Button';
 import { DownloadOutlined, EyeOutlined, LinkOutlined } from '@ant-design/icons';
 import { Transaction, TransactionResult } from '@app/blockchain/Transaction';
@@ -108,7 +107,7 @@ export const FileTable: React.FC<FilesProps> = ({ type, data, setData, chain, se
           return "";
         }
         return (
-          <Status color={status.color} text={status.label} />
+          <Tag color={status.color}>{status.label}</Tag>
         );
       },
     },

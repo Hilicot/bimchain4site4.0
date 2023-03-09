@@ -1,9 +1,9 @@
 
 export class FileStatus {
     static readonly NULL = new FileStatus("", "");
-    static readonly LOCAL = new FileStatus("Local", "var(--warning-color)");
-    static readonly COMMITTING = new FileStatus("Committing...", "var(--primary-color)");
-    static readonly ON_CHAIN = new FileStatus("On Chain", "var(--success-color)");
+    static readonly LOCAL = new FileStatus("Local", "blue");
+    static readonly COMMITTING = new FileStatus("Committing...", "gold");
+    static readonly ON_CHAIN = new FileStatus("On Chain", "green");
 
     private constructor(public readonly label: string, public readonly color: string) {
     }

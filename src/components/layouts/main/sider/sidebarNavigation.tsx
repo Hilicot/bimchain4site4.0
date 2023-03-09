@@ -1,8 +1,7 @@
 import React from 'react';
 import {
-  LayoutOutlined, UserOutlined,
+  LayoutOutlined, ProfileOutlined, SisternodeOutlined, UserOutlined,
 } from '@ant-design/icons';
-import { ReactComponent as NftIcon } from '@app/assets/icons/nft-icon.svg';
 
 export interface SidebarNavigationItem {
   title: string;
@@ -17,13 +16,19 @@ export const sidebarNavigation: SidebarNavigationItem[] = [
     title: 'pageTitle.filesPage',
     key: 'files-page',
     url: '/',
-    icon: <NftIcon />,
+    icon: <ProfileOutlined />,
   },
   {
     title: 'common.users',
     key: 'users',
     url: '/users',
     icon: <UserOutlined />,
+  },
+  {
+    title: 'pageTitle.gantt',
+    key: 'gantt',
+    url: '/gantt',
+    icon: <SisternodeOutlined />,
   },
   {
     title: 'pageTitle.pages',

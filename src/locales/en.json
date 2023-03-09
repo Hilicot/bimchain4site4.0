@@ -26,7 +26,8 @@
     "pages": "Pages",
     "serverError": "Server Error",
     "clientError": "Client Error",
-    "homePage": "Home Page"
+    "homePage": "Home Page",
+    "gantt": "Gantt"
   },
   "serverError": {
     "main": "Internal server error"
