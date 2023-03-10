@@ -47,7 +47,7 @@ const FilesPage: React.FC = () => {
     <Row>
       <SF.LeftSideCol xl={16} xxl={17} id="desktop-content">
         <Spinner spinning={loadingFiles} >
-          {false ? // TODO decide wheter to keep 1 or 2 tables
+          {true ? // TODO decide wheter to keep 1 or 2 tables
             <FileTable type={"ignore"} data={files} setData={setFiles} chain={chain} setViewedIFCfile={setViewedIFCfile} setReload={setReload}/>
             :
             <><ST.Card title="Certified files" padding="1.25rem 1.25rem 0">

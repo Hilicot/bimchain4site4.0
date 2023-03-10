@@ -44,6 +44,7 @@
     "search": "Search"
   },
   "error404": {
+    "comeBack": "Return to Home",
     "notFound": "Sorry, page not found!"
   },
   "gantt": {

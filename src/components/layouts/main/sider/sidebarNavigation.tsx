@@ -45,6 +45,11 @@ export const sidebarNavigation: SidebarNavigationItem[] = [
         key: '404Error',
         url: '/404',
       },
+      {
+        title: 'auth.signup',
+        key: 'signup',
+        url: '/auth/signup',
+      }
     ],
   }
 ];
