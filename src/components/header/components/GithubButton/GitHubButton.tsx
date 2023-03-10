@@ -11,7 +11,7 @@ export const GitHubButton: React.FC = (props) => {
   return (
     <Button
       type="link"
-      href="https://github.com/altence/lightence-admin"
+      href="https://github.com/Hilicot/bimchain4site4.0"
       icon={<GithubIcon />}
       target="_blank"
       $isDark={theme === 'dark'}

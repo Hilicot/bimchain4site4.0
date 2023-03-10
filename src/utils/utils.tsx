@@ -1,13 +1,6 @@
-import { Col, Row } from 'antd';
 import { NotificationType } from '@app/components/common/Notification/Notification';
 import { Priority } from '@app//constants/enums/priorities';
-import { ReactComponent as ETHIcon } from '@app/assets/icons/eth.svg';
-import { ReactComponent as BTCIcon } from '@app/assets/icons/btc.svg';
 
-import visa from '@app/assets/images/card-issuers/visa.png';
-import mastercard from '@app/assets/images/card-issuers/mastercard.png';
-import maestro from '@app/assets/images/card-issuers/maestro.png';
-import { CurrencyTypeEnum } from '@app/interfaces/interfaces';
 
 export const camelize = (string: string): string => {
   return string
@@ -15,64 +8,6 @@ export const camelize = (string: string): string => {
     .map((word, index) => (index === 0 ? word.toLowerCase() : word[0].toUpperCase() + word.slice(1)))
     .join('');
 };
-
-export const getCurrencyPrice = (
-  price: number | string,
-  currency: CurrencyTypeEnum,
-  isIcon = true,
-): string | React.ReactNode => {
-  switch (CurrencyTypeEnum[currency]) {
-    case 'USD': {
-      return isIcon ? `$${price}` : `${price} USD`;
-    }
-
-    case 'BTC': {
-      return isIcon ? (
-        <Row align="middle" gutter={[8, 8]}>
-          <Col style={{ display: 'flex' }}>
-            <BTCIcon />
-          </Col>
-
-          <Col>{price}</Col>
-        </Row>
-      ) : (
-        `${price} BTC`
-      );
-    }
-
-    case 'ETH': {
-      return isIcon ? (
-        <Row align="middle" gutter={[8, 8]}>
-          <Col style={{ display: 'flex' }}>
-            <ETHIcon />
-          </Col>
-
-          <Col>{price}</Col>
-        </Row>
-      ) : (
-        `${price} ETH`
-      );
-    }
-
-    default: {
-      return isIcon ? `$${price}` : `${price} USD`;
-    }
-  }
-};
-
-type MarkArea = {
-  xAxis: number;
-};
-
-export const getMarkAreaData = (data: string[] | number[]): MarkArea[][] =>
-  data.map((el, index) => [
-    {
-      xAxis: 2 * index,
-    },
-    {
-      xAxis: 2 * index + 1,
-    },
-  ]);
 
 export const capitalize = (word: string): string => `${word[0].toUpperCase()}${word.slice(1)}`;
 
@@ -198,29 +133,6 @@ export const formatNumberWithCommas = (value: number): string => {
 export const msToH = (ms: number): number => Math.floor(ms / 3600000);
 
 export const hToMS = (h: number): number => h * 3600000;
-
-export const getPaymentCardTypeIcon = (type: string): string | null => {
-  switch (type) {
-    case 'visa':
-      return visa;
-    case 'mastercard':
-      return mastercard;
-    case 'maestro':
-      return maestro;
-    case 'amex':
-      return 'amex';
-    case 'discover':
-      return 'discover';
-    case 'diners':
-      return 'diners';
-    case 'jcb':
-      return 'jcb';
-    case 'unionpay':
-      return 'unionpay';
-    default:
-      return null;
-  }
-};
 
 export const groupBy = (xs:any[], key:any) => {
   return xs.reduce(function(rv, x) {

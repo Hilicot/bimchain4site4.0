@@ -1,21 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 //import { Table } from 'components/common/Table/Table';
-import { Table, Tooltip, Row } from 'antd';
+import { Table, Tooltip, Row, Tag } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { Status } from '@app/components/profile/profileCard/profileFormNav/nav/payments/paymentHistory/Status/Status';
 import { Button } from '@app/components/common/buttons/Button/Button';
 import { DownloadOutlined, EyeOutlined, LinkOutlined } from '@ant-design/icons';
 import { Transaction, TransactionResult } from '@app/blockchain/Transaction';
 import Blockchain from '@app/blockchain/Blockchain';
 import { FileProxy, FileStatus } from './file-handling-utils';
+import { User } from '@app/domain/User';
+import { getUser } from '@app/api/user.api'
+
+const users_cache = new Map<string, User | null>();
 
 interface FilesProps {
   type: string;
   data: FileProxy[];
   setData: (data: FileProxy[]) => void;
   chain: Blockchain;
-  setViewedIFCfile: (viewedIFCfile: FileProxy|null) => void;
+  setViewedIFCfile: (viewedIFCfile: FileProxy | null) => void;
   setReload: (reload: boolean) => void;
 }
 
@@ -24,7 +27,7 @@ const initialPagination: Pagination = {
   pageSize: 20,
 };
 
-export const FileTable: React.FC<FilesProps> = ({ type, data, setData, chain, setViewedIFCfile, setReload}: any) => {
+export const FileTable: React.FC<FilesProps> = ({ type, data, setData, chain, setViewedIFCfile, setReload }: any) => {
   const { t } = useTranslation();
 
   const [pagination, setPagination] = useState<Pagination>(initialPagination);
@@ -33,23 +36,23 @@ export const FileTable: React.FC<FilesProps> = ({ type, data, setData, chain, se
 
   // TODO: remove ignore option (only used to disable one single table)
   let displayed_data: FileProxy[];
-  if(type === "ignore")
+  if (type === "ignore")
     displayed_data = data;
   else
     displayed_data = data.filter((item: FileProxy) => {
       if (type === "on_chain")
-        return item.status === FileStatus.ON_CHAIN ;
-      else if(type === "local")
+        return item.status === FileStatus.ON_CHAIN;
+      else if (type === "local")
         return item.status !== FileStatus.ON_CHAIN;
     })
 
   // to handle file uploads
   const uploadFile = async (item: FileProxy) => {
-    if (!chain){
+    if (!chain) {
       console.error("Blockchain not initialized");
       return;
     }
-    
+
     const transaction = new Transaction(item);
     const originalStatus = item.status;
     item.status = FileStatus.COMMITTING;
@@ -59,14 +62,14 @@ export const FileTable: React.FC<FilesProps> = ({ type, data, setData, chain, se
       .then((res: TransactionResult) => {
         if (res.success)
           item.status = FileStatus.ON_CHAIN;
-        else{
+        else {
           console.error("Failed to upload file to blockchain", res)
           item.status = originalStatus;
         }
         // Reload table (refetch from blockchain)
         refreshData();
         setReload();
-      }).catch((error:any) => console.log(error))
+      }).catch((error: any) => console.log(error))
 
   };
 
@@ -87,7 +90,7 @@ export const FileTable: React.FC<FilesProps> = ({ type, data, setData, chain, se
       title: "Last Modified",
       dataIndex: 'last_modified',
       key: 'last_modified',
-      width: '20%',
+      width: '10%',
       render: (last_modified: Date) => last_modified.toLocaleDateString(),
       sorter: (a: FileProxy, b: FileProxy) => a.last_modified.getTime() - b.last_modified.getTime(),
       showSorterTooltip: false,
@@ -96,19 +99,49 @@ export const FileTable: React.FC<FilesProps> = ({ type, data, setData, chain, se
       title: "Version",
       dataIndex: 'version',
       key: 'version',
-      width: '12%',
+      width: '5%',
+    },
+    {
+      title: 'Author',
+      dataIndex: 'author',
+      key: 'author',
+      width: '20%',
+      render: (author: string) => {
+        // see if we have this address in cache, else try to fetch it from server. In case of error, just show the address
+        if (!author) return " - "
+        if (users_cache.has(author)) {
+          if (users_cache.get(author))
+            return users_cache.get(author)?.name + " " + users_cache.get(author)?.surname;
+          else
+            return author;
+        }
+        else {
+          // first time I see this address, try to fetch the user info from server
+          getUser(author).then((user: User) => {
+            console.log(user)
+            users_cache.set(author, user);
+            refreshData();
+
+          }).catch((error: any) => {
+            // If no user is found, record that user is null and just show the address
+            users_cache.set(author, null);
+            console.log("Could not fetch user " + author + ": " + error)
+          })
+          return author;
+        }
+      }
     },
     {
       title: "Status",
       dataIndex: 'status',
       key: 'status',
-      width: '20%',
+      width: '10%',
       render: (status: FileStatus) => {
         if (status === FileStatus.NULL) {
           return "";
         }
         return (
-          <Status color={status.color} text={status.label} />
+          <Tag color={status.color}>{status.label}</Tag>
         );
       },
     },
@@ -116,8 +149,8 @@ export const FileTable: React.FC<FilesProps> = ({ type, data, setData, chain, se
       title: "Actions",
       dataIndex: 'actions',
       //key: 'actions',
-      width: '20%',
-      render: (_action:any, item: any) => {
+      width: '15%',
+      render: (_action: any, item: any) => {
         if (item.status === FileStatus.NULL) {
           return "";
         }
@@ -125,17 +158,17 @@ export const FileTable: React.FC<FilesProps> = ({ type, data, setData, chain, se
           <div>
             <Row>
               <Tooltip title="Download">
-                <Button type="text" icon={<DownloadOutlined />} size="small" onClick={()=>downloadFile(item)}/>
+                <Button type="text" icon={<DownloadOutlined />} size="small" onClick={() => downloadFile(item)} />
               </Tooltip>
               {/* TODO replace with double click?*/}
               {/* TODO restrict viewer to IFC only, or build new viewers*/}
-              { item.name.split('.').pop() === "ifc" &&
-              <Tooltip title="View File">
-                  <Button type="text" icon={<EyeOutlined />} size="small" onClick={()=>{setViewedIFCfile(item)}}/>
-              </Tooltip>
+              {item.name.split('.').pop() === "ifc" &&
+                <Tooltip title="View File">
+                  <Button type="text" icon={<EyeOutlined />} size="small" onClick={() => { setViewedIFCfile(item) }} />
+                </Tooltip>
               }
               {(item.status != FileStatus.ON_CHAIN && item.status != FileStatus.COMMITTING) ? (<Tooltip title="Save to Blockchain">
-                <Button type="text" icon={<LinkOutlined />} size="small" onClick={() => uploadFile(item)} disabled={chain ? false : true}/>
+                <Button type="text" icon={<LinkOutlined />} size="small" onClick={() => uploadFile(item)} disabled={chain ? false : true} />
               </Tooltip>)
                 : (<></>)}
             </Row>
@@ -165,22 +198,3 @@ interface Pagination {
   pageSize?: number;
   total?: number;
 }
-
-//TODO remove fake data
-/*
-export const getFakeTreeTableData = async (): Promise<FileProxy[]> => {
-  
-    const f1 = new FileProxy("Main Structure", new Date("2023/02/15"), 1, FileStatus.NULL);
-    const f11 = new FileProxy("Floor 1", new Date("2023/02/01"), 1, FileStatus.LOCAL);
-    const f12 = new FileProxy("Floor 2", new Date("2023/02/03"), 2, FileStatus.LOCAL);
-    const f121 = new FileProxy("Room 1", new Date("2023/02/03"), 1, FileStatus.LOCAL);
-    const f13 = new FileProxy("Floor 3", new Date("2022/12/21"), 1, FileStatus.ON_CHAIN);
-    const f4 = new FileProxy("Outer Beams", new Date("2022/11/15"), 2, FileStatus.ON_CHAIN);
-    const f5 = new FileProxy("Outer Beams 2", new Date("2022/12/21"), 2, FileStatus.ON_CHAIN);
-    const f6 = new FileProxy("Pavement", new Date("2022/12/21"), 3, FileStatus.LOCAL);
-
-    f12.children = [f121];
-    f1.children = [f11, f12, f13];
-    return [f1, f4, f5, f6]
-};
-*/

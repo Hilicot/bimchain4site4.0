@@ -58,6 +58,7 @@ export class Web3Manager {
         const networkId = await web3.eth.net.getId()
         // @ts-ignore
         const networkData = CDE.networks[networkId]
+        console.log("networkData: ", networkData, networkId)
         if (networkData) {
             this.CDEcontract = new web3.eth.Contract(CDE.abi, networkData.address)
         } else {
