@@ -45,5 +45,10 @@
   },
   "error404": {
     "notFound": "Sorry, page not found!"
+  },
+  "gantt": {
+    "start": "Start",
+    "dependencies": "Dependencies",
+    "end": "End"
   }
 }

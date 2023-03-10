@@ -4,12 +4,16 @@ import { Col, Row, Button } from 'antd';
 import { DeleteTwoTone } from '@ant-design/icons';
 import { FrappeGantt, Task } from 'frappe-gantt-react';
 import '@app/components/gantt/chart.scss'
+import { AddTaskModal } from './AddTaskModal';
 
 interface GanttProps {
     tasks: Task[]
+    setTasks: React.Dispatch<React.SetStateAction<Task[]>>
 }
 
 export const Gantt: React.FC<GanttProps> = (props) => {    
+    const [openAddTask, setOpenAddTask] = React.useState(false);
+
     return (
         <Row className="chart">
             <Col className="left" span={6}>
@@ -18,12 +22,12 @@ export const Gantt: React.FC<GanttProps> = (props) => {
                         props.tasks.map((t: Task, index: number) => {
                             return (
                                 <div key={index} className="label">
-                                    <span className='bold space-around'>{index}</span>
+                                    <span className='bold space-around'>{index}.....</span>
                                     <span className="bold space-around capitalize">{t.name}</span>
                                     <Button
                                         className="capitalize button"
                                         type="text"
-                                        onClick={() => console.log("delete")}
+                                        onClick={() => props.setTasks((old: Task[]) => old.filter((t2: Task) => t.id !== t2.id))}
                                     >
                                         <DeleteTwoTone twoToneColor='gray' />
                                     </Button>
@@ -34,7 +38,7 @@ export const Gantt: React.FC<GanttProps> = (props) => {
                     ) : null}
                 </div>
                 <div className='add-task'>
-                    <Button type='primary' onClick={() => console.log("add")}>Add</Button>
+                    <Button type='primary' onClick={() => setOpenAddTask(true)}>Add</Button>
                 </div>
             </Col>
             <Col className="right" span={18}>
@@ -54,6 +58,10 @@ export const Gantt: React.FC<GanttProps> = (props) => {
                     </>
                 ) : null}
             </Col>
+            <AddTaskModal
+                open={openAddTask}
+                setOpen={setOpenAddTask}
+                addTasks={(t:Task) => {props.setTasks((old:Task[]) => [...old, t])}}></AddTaskModal>
         </Row>
     )
 }
