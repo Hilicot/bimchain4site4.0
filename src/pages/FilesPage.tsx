@@ -30,10 +30,6 @@ const FilesPage: React.FC = () => {
       await BM.init()
       setChain(BM.getBlockchain());
 
-      // add data to table
-      // TODO remove fake data
-      // const fake_data = await getFakeTreeTableData()
-      // let res = fake_data;
       const remoteFiles = await chain.fetchRemoteFiles()
       setFiles(oldFiles => {
         const localFiles = oldFiles.filter((file) => file.status !== FileStatus.ON_CHAIN);
