@@ -1,0 +1,111 @@
+$line-color: #f5f5f5;
+$line-width: 2px;
+$top-margin: calc(60px);
+$labelHeight: 38px;
+
+$backgroundColor: whiteSmoke;
+$barColor: #1c68a6;
+
+.gantt {
+    .bar-progress {
+        fill: $barColor !important;
+    }
+}
+
+//backdrop layer 1
+.chart {
+    padding: 16px;
+    display: flex;
+    flex-direction: row;
+    font-family: 'Roboto', serif;
+    background-color: white;
+    border-radius: 32px;
+
+    .left {
+        padding-top: $top-margin;
+        min-width: 200px !important;
+        top: 50%;
+        transform: translate(0%, -50%);
+
+        //left side layer 2
+        .labels {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: left;
+
+
+
+            .label {
+                box-sizing: border-box;
+                height: $labelHeight;
+                border-bottom: 1px solid gray;
+                font-size: 10px;
+                display: flex;
+                flex-direction: row;
+
+
+                // background-color: green;
+
+
+                &:first-child {
+                    border-top: $line-width solid #E9E9E9;
+                }
+
+                &:last-child {
+                    border-bottom: $line-width solid $line-color;
+                }
+
+                &:nth-child(even) {
+                    background-color: $line-color;
+                    color: black;
+                }
+            }
+
+            .button {
+                height: calc($labelHeight - 10px);
+                font-size: 14 px;
+                padding: 5px;
+                color:$barColor;
+            }
+        }
+    }
+
+    .right {
+        //layer 3 backdrop of gant chart itself
+        font-weight: bold;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        overflow: scroll;
+
+        .actions {
+            display: flex;
+            flex-direction: row;
+        }
+    }
+
+    .add-task {
+        display: flex;
+        flex-direction: row;
+        align-content: center;
+        justify-content: center;
+        margin: 32px;
+    }
+
+    @media only screen and (max-width: 600px) {
+        margin: 0px;
+        padding: 0px;
+        max-width: 100%;
+
+        .left {
+            display: none;
+        }
+
+        .right {
+            max-width: 100% !important;
+            margin: 0px;
+            padding: 0px;
+        }
+    }
+}

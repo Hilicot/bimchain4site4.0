@@ -1,25 +1,45 @@
 import { useMounted } from '@app/hooks/useMounted';
 import { useCallback, useEffect } from 'react';
-import { IfcViewerAPI } from 'web-ifc-viewer';
 import { Color } from "three";
-import { IFCSPACE, IFCOPENINGELEMENT } from 'web-ifc';
+import { IFCSITE, IFCBUILDINGSTOREY, IFCSPACE, IFCOPENINGELEMENT, IFCSLAB, IFCWALLSTANDARDCASE, IFCWINDOW, IFCFURNISHINGELEMENT, IFCDOOR, IFCCURTAINWALL, IFCPLATE } from 'web-ifc';
 import { FileProxy } from '../files-page/file-handling-utils';
 import React from 'react';
 import { Spinner } from '../common/Spinner/Spinner';
-import { Tooltip } from 'antd';
+import { Col, Row, Space, Tooltip } from 'antd';
 import { Button } from '@app/components/common/buttons/Button/Button';
-import { BorderLeftOutlined } from '@ant-design/icons';
+import { Dropdown } from '@app/components/common/Dropdown/Dropdown';
+import { BorderLeftOutlined, DownOutlined } from '@ant-design/icons';
+import { Modal } from '../common/Modal/Modal';
+import { create_highlight_groups, highlight_addition, highlight_model_features, highlight_type } from './diff_viewer';
 
-let viewer: IfcViewerAPI;
+//TODO Conditional import for development, remove it on production 
+//import {IfcViewerAPI} from 'web-ifc-viewer-bimchain';
+//let viewer: IfcViewerAPI;
+export let viewer_module: any;
+try {
+  viewer_module = require('./web-ifc-viewer-bimchain');
+} catch (err) {
+  if (err instanceof Error) {
+    viewer_module = require('web-ifc-viewer-bimchain');
+  } else {
+    throw err;
+  }
+}
+const { IfcViewerAPI } = viewer_module;
+let viewer: typeof IfcViewerAPI;
+let model: any;
 
 interface IFCviewerProps {
-  file: FileProxy|null
+  file: FileProxy | null
 }
 
 export const IFCviewer: React.FC<IFCviewerProps> = ({ file }) => {
   const { isMounted } = useMounted();
   const [loading, setLoading] = React.useState(false);
   const [isClipperActive, setIsClipperActive] = React.useState(false);
+  const [properties, setProperties] = React.useState<any>(null);
+  const [showProperties, setShowProperties] = React.useState(false);
+  const [selectedItemType, setSelectedItemType] = React.useState<number>(-1);
 
   const loadIFCViewer = useCallback(async () => {
     if (!file)
@@ -46,7 +66,8 @@ export const IFCviewer: React.FC<IFCviewerProps> = ({ file }) => {
     const window = global.window;
     viewer.IFC.loader.ifcManager.useWebWorkers(true, '../../../wasm/IFCWorker.js');
     viewer.IFC.setWasmPath('../../../wasm/');
-    const model = await viewer.IFC.loadIfc(f, true);
+    model = await viewer.IFC.loadIfc(f, true);
+    console.log(model)
 
     viewer.context.ifcCamera.cameraControls
     viewer.context.renderer.usePostproduction = true;
@@ -85,41 +106,91 @@ export const IFCviewer: React.FC<IFCviewerProps> = ({ file }) => {
       if (viewer.clipper.active) {
         viewer.clipper.createPlane();
       } else {
-        const result = await viewer.IFC.selector.highlightIfcItem(true);
+        const result = await viewer.IFC.selector.highlightIfcItem(true)
         if (!result) return;
         const { modelID, id } = result;
         const props = await viewer.IFC.getProperties(modelID, id, true, false);
+        setProperties(JSON.stringify(props, null, 3));
         console.log(props);
       }
     }
-    console.log()
-    setLoading(false);
-  },[file])
 
-    // load file
-    useEffect(
-      () => {
-        loadIFCViewer();
-      },
-      [isMounted, loadIFCViewer],
-    );
+    //  create highlight groups
+    await create_highlight_groups(viewer.IFC);
+
+    setLoading(false);
+  }, [file])
+
+  // load file
+  useEffect(
+    () => {
+      loadIFCViewer();
+    },
+    [isMounted, loadIFCViewer],
+  );
 
   const toggleClippingPlanes = () => {
-    if(viewer)
-      viewer.clipper.active  = !viewer.clipper.active 
+    if (viewer)
+      viewer.clipper.active = !viewer.clipper.active
     setIsClipperActive(viewer.clipper.active)
   }
 
+  const highlightType = async (type: number) => {
+    // Highlight model features
+    setSelectedItemType(type);
+    setLoading(true);
+    await highlight_type(viewer.IFC, model, type);
+    setLoading(false);
+  }
+
+  const dropDownItems = [{ key: -1, label: 'None' }, { key: IFCSITE, label: "IFCSITE" }, { key: IFCBUILDINGSTOREY, label: "IFCBUILDINGSTOREY" }, { key: IFCSLAB, label: "IFCSLAB" }, { key: IFCWALLSTANDARDCASE, label: "IFCWALLSTANDARDCASE" }, { key: IFCWINDOW, label: "IFCWINDOW" }, { key: IFCFURNISHINGELEMENT, label: "IFCFURNISHINGELEMENT" }, { key: IFCDOOR, label: "IFCDOOR" }, { key: IFCCURTAINWALL, label: "IFCCURTAINWALL" }, { key: IFCPLATE, label: "IFCPLATE" }]
+
   return (
-    <Spinner spinning={loading}>
-      <Tooltip title="Clipping planes">
-        <Button type={isClipperActive ? "primary" : "ghost"} icon={<BorderLeftOutlined />} size="small" onClick={() => { toggleClippingPlanes() }} />
-      </Tooltip>
-      <div id="IFCviewer_canvas" style={{
-        position: "relative",
-        height: "80vh",
-        width: "90vw",
-      }}></div>
-    </Spinner>
+    <>
+      <Spinner spinning={loading}>
+        <Row>
+          <Col flex={8}>
+            <div id="IFCviewer_canvas" style={{
+              position: "relative",
+              height: "80vh",
+              width: "80vw",
+            }}></div>
+          </Col>
+          <Col flex={2}>
+            <Tooltip title="Clipping planes">
+              <Button type={isClipperActive ? "primary" : "default"} icon={<BorderLeftOutlined />} size="small" onClick={() => { toggleClippingPlanes() }} >Clipping planes</Button>
+            </Tooltip>
+            <br />
+            <Tooltip title="Clipping planes">
+              <Button disabled={!properties} icon={<BorderLeftOutlined />} size="small" onClick={() => { setShowProperties(true) }} >Properties</Button>
+            </Tooltip>
+            <br />
+            <Dropdown menu={{ items: dropDownItems, onClick: (e) => highlightType(parseInt(e.key)) }}>
+              <Button>
+                <Space>
+                  {"Select type: " + dropDownItems.find(i => i.key === selectedItemType)?.label} <DownOutlined />
+                </Space>
+              </Button>
+            </Dropdown>
+          </Col>
+        </Row>
+      </Spinner >
+      <Modal
+        title="Properties"
+        centered={true}
+        open={showProperties}
+        onOk={() => setShowProperties(false)}
+        onCancel={() => setShowProperties(false)}
+        //width={'100%'}
+        size="medium"
+        destroyOnClose={true}
+        bodyStyle={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+        <pre>{properties}</pre>
+      </Modal>
+    </>
   );
 }

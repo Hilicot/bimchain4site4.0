@@ -58,6 +58,7 @@ export class Web3Manager {
         const networkId = await web3.eth.net.getId()
         // @ts-ignore
         const networkData = CDE.networks[networkId]
+        console.log("networkData: ", networkData, networkId)
         if (networkData) {
             this.CDEcontract = new web3.eth.Contract(CDE.abi, networkData.address)
         } else {
@@ -91,7 +92,6 @@ export class Web3Manager {
             await this.init();
         }
         const files_raw = await this.CDEcontract.methods.getAllFilesRecent().call()
-        console.log(this.CDEcontract, files_raw)
         const files = files_raw.map((file: any) => {
             const name = (win.web3.utils.toAscii(file[0]) as string).split("\u0000")[0] // convert the name from bytes32 to string
             return {
@@ -102,7 +102,7 @@ export class Web3Manager {
                 timestamp: file[4] as number
             }
         })
-        console.log(files)
+        console.log(files_raw)
         return files;
     }
 

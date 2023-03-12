@@ -5,11 +5,7 @@ import {
   LoginRequest,
   signUp,
   SignUpRequest,
-  resetPassword,
-  verifySecurityCode,
-  SecurityCodePayload,
-  NewPasswordData,
-  setNewPassword,
+  resetPassword
 } from '@app/api/auth.api';
 import { setUser } from '@app/store/slices/userSlice';
 import { deleteToken, deleteUser, persistToken, readToken } from '@app/services/localStorage.service';
@@ -38,15 +34,6 @@ export const doSignUp = createAsyncThunk('auth/doSignUp', async (signUpPayload: 
 export const doResetPassword = createAsyncThunk(
   'auth/doResetPassword',
   async (resetPassPayload: ResetPasswordRequest) => resetPassword(resetPassPayload),
-);
-
-export const doVerifySecurityCode = createAsyncThunk(
-  'auth/doVerifySecurityCode',
-  async (securityCodePayload: SecurityCodePayload) => verifySecurityCode(securityCodePayload),
-);
-
-export const doSetNewPassword = createAsyncThunk('auth/doSetNewPassword', async (newPasswordData: NewPasswordData) =>
-  setNewPassword(newPasswordData),
 );
 
 export const doLogout = createAsyncThunk('auth/doLogout', (payload, { dispatch }) => {

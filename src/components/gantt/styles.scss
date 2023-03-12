@@ -1,0 +1,62 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,400;0,500;1,300;1,400;1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Zilla+Slab:ital,wght@0,400;0,500;1,300;1,400;1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;1,200;1,300;1,400&display=swap');
+$normal:4px;
+$primary:#0078DB;
+$primary-tint:#E5F2E5;
+$primary-shade:#004000;
+$light:#fff;
+$white-darker:whiteSmoke;
+$dark:#000;
+
+html{
+  font-family: 'Spectral', serif !important;
+  scrollbar-width: thin !important;
+
+  
+}
+.App {
+  font-family: sans-serif;
+  text-align: center;
+  
+}
+
+.tiny-circle{
+  // width:40px !important;
+  // height:40px !important;
+  // border: 2px solid $primary;
+  // font-size: 12px;
+  // font-weight: 400;
+  // padding-left:2px;
+  // padding-right:2px;
+  // margin-left: 8px;
+  // border-radius:50%;
+  // background-color: $primary;
+  color:black;
+}
+
+.space-around{
+  margin:$normal;
+}
+.margin-top-auto{
+  margin-top: auto !important;
+}
+.capitalize{
+  text-transform: capitalize !important;
+}
+.bold {
+  font-weight: bold;
+}
+
+.MuiSlider-colorPrimary{
+  color:$primary;
+}
+
+.MuiPaper-elevation0{
+  border-radius: 50px;
+  // background: #e0e0e0;
+  box-shadow:  20px 20px 60px #bebebe,
+              -20px -20px 60px #ffffff;
+}

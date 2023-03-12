@@ -1,0 +1,55 @@
+{
+  "auth": {
+    "signUpSuccessMessage": "New user was created",
+    "signup": "Sign Up",
+    "registrationCode": "Code"
+  },
+  "common": {
+    "address": "Address",
+    "back": "Back",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "email": "Email",
+    "firstName": "First Name",
+    "name": "Name",
+    "notFound": "Sorry, there’s nothing found",
+    "notValidEmail": "Please input a valid email address!",
+    "oops": "Oops!",
+    "openInNewTab": "Open in new tab",
+    "requiredField": "This field is required!",
+    "users": "Users",
+    "lastName": "Last Name"
+  },
+  "pageTitle": {
+    "filesPage": "Files",
+    "pages": "Pages",
+    "serverError": "Server Error",
+    "clientError": "Client Error",
+    "homePage": "Home Page",
+    "gantt": "Gantt"
+  },
+  "serverError": {
+    "main": "Internal server error"
+  },
+  "signup": {
+    "alreadyHaveAccount": "Already have an account? Return to the",
+    "step1": "Wallet",
+    "step2": "Info"
+  },
+  "uploads": {
+    "dragUpload": "Click or drag file to this area to upload"
+  },
+  "header": {
+    "search": "Search"
+  },
+  "error404": {
+    "comeBack": "Return to Home",
+    "notFound": "Sorry, page not found!"
+  },
+  "gantt": {
+    "start": "Start",
+    "dependencies": "Dependencies",
+    "end": "End"
+  }
+}

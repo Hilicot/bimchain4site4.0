@@ -30,10 +30,6 @@ const FilesPage: React.FC = () => {
       await BM.init()
       setChain(BM.getBlockchain());
 
-      // add data to table
-      // TODO remove fake data
-      // const fake_data = await getFakeTreeTableData()
-      // let res = fake_data;
       const remoteFiles = await chain.fetchRemoteFiles()
       setFiles(oldFiles => {
         const localFiles = oldFiles.filter((file) => file.status !== FileStatus.ON_CHAIN);
@@ -51,7 +47,7 @@ const FilesPage: React.FC = () => {
     <Row>
       <SF.LeftSideCol xl={16} xxl={17} id="desktop-content">
         <Spinner spinning={loadingFiles} >
-          {false ? // TODO decide wheter to keep 1 or 2 tables
+          {true ? // TODO decide wheter to keep 1 or 2 tables
             <FileTable type={"ignore"} data={files} setData={setFiles} chain={chain} setViewedIFCfile={setViewedIFCfile} setReload={setReload}/>
             :
             <><ST.Card title="Certified files" padding="1.25rem 1.25rem 0">

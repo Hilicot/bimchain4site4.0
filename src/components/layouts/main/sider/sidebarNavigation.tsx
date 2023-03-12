@@ -1,8 +1,7 @@
 import React from 'react';
 import {
-  LayoutOutlined,
+  LayoutOutlined, ProfileOutlined, SisternodeOutlined, UserOutlined,
 } from '@ant-design/icons';
-import { ReactComponent as NftIcon } from '@app/assets/icons/nft-icon.svg';
 
 export interface SidebarNavigationItem {
   title: string;
@@ -14,31 +13,43 @@ export interface SidebarNavigationItem {
 
 export const sidebarNavigation: SidebarNavigationItem[] = [
   {
-    title: 'common.filesPageTitle',
+    title: 'pageTitle.filesPage',
     key: 'files-page',
     url: '/',
-    icon: <NftIcon />,
+    icon: <ProfileOutlined />,
   },
   {
-    title: 'common.pages',
+    title: 'common.users',
+    key: 'users',
+    url: '/users',
+    icon: <UserOutlined />,
+  },
+  {
+    title: 'pageTitle.gantt',
+    key: 'gantt',
+    url: '/gantt',
+    icon: <SisternodeOutlined />,
+  },
+  {
+    title: 'pageTitle.pages',
     key: 'pages',
     icon: <LayoutOutlined />,
     children: [
       {
-        title: 'common.profilePage',
-        key: 'profile',
-        url: '/profile',
-      },
-      {
-        title: 'common.serverError',
+        title: 'pageTitle.serverError',
         key: 'serverError',
         url: '/server-error',
       },
       {
-        title: 'common.clientError',
+        title: 'pageTitle.clientError',
         key: '404Error',
         url: '/404',
       },
+      {
+        title: 'auth.signup',
+        key: 'signup',
+        url: '/auth/signup',
+      }
     ],
   }
 ];

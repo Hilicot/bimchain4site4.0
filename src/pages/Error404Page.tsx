@@ -9,7 +9,7 @@ const Error404Page: React.FC = () => {
 
   return (
     <>
-      <PageTitle>{t('common.clientError')}</PageTitle>
+      <PageTitle>{t('fileTitle.clientError')}</PageTitle>
       <Error img={error404} msg={t('error404.notFound')} />
     </>
   );
